@@ -27,7 +27,7 @@
     <script type="text/javascript" src="__PUBLIC__/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
-    <script type="text/css">
+    <style type="text/css">
         .Hui-article-box {
             position: absolute;
             top: 10px;
@@ -38,7 +38,42 @@
             z-index: 1;
             background-color: #fff;
         }
-    </script>
+
+        .cell{
+            display:inline-block;
+            width: 250px;
+            height:200px;
+            border: #ccc 1px solid;
+            border-radius: 5px; 
+            -moz-border-radius: 5px; 
+            -webkit-border-radius: 5px; 
+            text-align: center;
+            margin-left: 30px;
+            margin-top:20px;
+        }
+
+        .data-name{
+            font-size: 1.2em;
+            color:#666;
+            font-weight: bold;
+            display: block;
+            margin: 20px auto;
+        }
+
+        .cell input {
+            display: block;
+            height:35px;
+            width:180px;
+            border:#ccc 1px solid;
+            margin: 20px auto;
+            padding:0 10px;
+        }
+
+        .cell .edit-btn {
+            width:200px;
+            border:0;
+        }
+    </style>
     <title>丁妈后台管理系统</title>
 </head>
 <body>
@@ -104,6 +139,35 @@
         <div class="show_iframe">
                 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理后台 <span class="c-gray en">&gt;</span> 管理首页 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
                 <div class="page-container">
+                    <div class="cell">
+                        <form id="the-machine" class="form form-horizontal" action="{:U('doEdit')}" method="post" onsubmit="return ac_from(machine);" enctype="multipart/form-data">
+                            <div class="data-name">机器数</div>
+                            <div class="data-detail">
+                                <input type="text" name = "machine" id = "machine" value = "{$machine}">
+                                <input class="btn btn-primary radius edit-btn" type="submit" name="submit" value="&nbsp;修&nbsp;&nbsp;改&nbsp;">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="cell">
+                            <form id="the-cost" class="form form-horizontal" action="{:U('doEdit')}" method="post" onsubmit="return ac_from(cost);" enctype="multipart/form-data">
+                                <div class="data-name">活动成本</div>
+                                <div class="data-detail">
+                                    <input type="text" name = "cost" id = "cost" value = "{$cost}">
+                                    <input class="btn btn-primary radius edit-btn" type="submit" name="submit" value="&nbsp;修&nbsp;&nbsp;改&nbsp;">
+                                </div>
+                            </form>
+                    </div>
+
+                    <div class="cell">
+                            <form id="the-family" class="form form-horizontal" action="{:U('doEdit')}" method="post" onsubmit="return ac_from(family);" enctype="multipart/form-data">
+                                <div class="data-name">已检测家庭</div>
+                                <div class="data-detail">
+                                    <input type="text" name = "family" id = "family" value = "{$family}">
+                                    <input class="btn btn-primary radius edit-btn" type="submit" name="submit" value="&nbsp;修&nbsp;&nbsp;改&nbsp;">
+                                </div>
+                            </form>
+                    </div>
 
                     
                 </div>
@@ -125,6 +189,24 @@
         let url='?page='+page;
         location=url;
     }
+
+    function ac_from(id){
+        var num=$(id).val();
+        if (!(/(^[1-9]\d*$)/.test(num))) { 
+            alert('请输入正整数');
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    $("#the-machine,#the-cost,#the-family").ajaxForm(function(data){    
+            if(data == true){  
+                alert("修改成功");  
+            }else{
+                alert("修改失败");
+            }  
+        });       
 </script>
 
 </body>

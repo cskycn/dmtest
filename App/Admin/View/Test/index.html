@@ -116,6 +116,7 @@
                                <td style="width:120px;">视频地址</td>
                                <td style="width:120px;">封面地址</td>
                                <td style="width:120px;">详情图片地址</td>
+                               <td style="width:120px;">需要助力几次</td>
                                <td style="width:120px;">检测状态</td>
                                <td style="width:180px;">操作</td>
                              </tr>
@@ -123,7 +124,7 @@
                              <!-- 遍历 -->
                             <if condition="($empty eq 1)"> 
                                 <tr>
-                                    <td colspan='7'>没有数据</td>
+                                    <td colspan='8'>没有数据</td>
                                 </tr>
                             </if>
                             <volist name="tests" id="v">
@@ -133,6 +134,7 @@
                                    <td>{$v.video_url}</td>
                                    <td><img src="{$v.cover_img_url}" style="width:120px;"/></td>
                                    <td><img src="{$v.detail_img_url}" style="width:120px;"/></td>
+                                   <td>{$v.friend_count}</td>
                                    <td>{$v.status}</td>
                                    <td><a onclick="edit_id_urls({$v.id})">编辑</a> &nbsp;&nbsp;&nbsp;&nbsp;<a onclick="del_id_urls({$v.id})">删除</a></td>
                                 </tr>
@@ -141,7 +143,7 @@
                              <!-- 遍历 -->
                              </tbody>
                              <tr>
-                                    <td colspan="7" class="td_2">
+                                    <td colspan="8s" class="td_2">
                                         {$page_index} 
                                     </td>
                                 </tr>

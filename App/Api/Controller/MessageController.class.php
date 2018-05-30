@@ -13,7 +13,7 @@ class MessageController extends PublicController {
     //  提交留言信息
     //***************************
     public function submitMessage(){
-        $con["user_id"] = intval($_REQUEST['user_id']);
+        $con["user_id"] = $_REQUEST['user_id'];
         $con["content"] = trim(clearhtml($_REQUEST['content']));
         $con["create_time"] = time();
 
@@ -67,7 +67,7 @@ class MessageController extends PublicController {
     //  用户是否有未读消息
     //***************************
     public function checkRead(){
-        $con["user_id"] = intval($_REQUEST['user_id']);
+        $con["user_id"] = $_REQUEST['user_id'];
 
         $con["is_read"] = '0';
         $con['reply'] = array('NEQ','');  
@@ -98,7 +98,7 @@ class MessageController extends PublicController {
     //  获取全部系统消息
     //***************************
     public function getAllMyNotice(){
-        $con["user_id"] = intval($_REQUEST['user_id']);
+        $con["user_id"] = $_REQUEST['user_id'];
         $con['reply'] = array('NEQ','');  
 
         $noticeCon["status"] = 1;
@@ -141,7 +141,7 @@ class MessageController extends PublicController {
     //  更新用户读消息时间
     //***************************
     public function freshMessageReadTime(){ 
-        $uid = intval($_REQUEST['user_id']);
+        $uid = $_REQUEST['user_id'];
         $data["time"] = time();
         M('isread')->where("uid='$uid'")->save($data);
     }
@@ -152,7 +152,7 @@ class MessageController extends PublicController {
     //***************************
     public function getNewMessageIsRead(){ 
         $statusCode = 200;
-        $uid = intval($_REQUEST['user_id']);
+        $uid = $_REQUEST['user_id'];
         if($res = M('isread')->where("uid='$uid'")->find()){
             $notice = M('notice') ->order('ctime desc') -> find();
 

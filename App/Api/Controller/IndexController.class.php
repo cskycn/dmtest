@@ -13,23 +13,18 @@ class IndexController extends PublicController {
         $statusCode = 500;
         $errorMsg = '啊呀出错了';
 
-        //======================
-        //获取当前机器数量
-        //======================
-        $machine = 1024;
-    
-        //======================
-        //获取活动成本
-        //======================
-        $cost = 2222;
+        $machine = 0;
+        $cost = 0;
+        $family = 0;
 
-        //======================
-        //获取已检测家庭数
-        //======================
-        $family = 123;
+        $res = M('index')->find();
+        if(is_array($res) && count($res)!=0){
+            $machine = $res['machine'];
+            $cost = $res['cost'];
+            $family = $res['family'];
+        }
 
         $testList = $this->getTestList();
-
         if($testList && count($testList) > 0){
             $statusCode = 200;
             echo json_encode(array('status'=> $statusCode, 'meta' => array('machine'=>$machine,'cost'=>$cost,'family'=>$family,'testList'=>$testList)));

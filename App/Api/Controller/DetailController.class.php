@@ -12,18 +12,26 @@ class DetailController extends PublicController {
         //获取检测信息
         //======================
         $testID = intval($_REQUEST['test_id']);
-        $userID = intval($_REQUEST['user_id']);
+        $userID = $_REQUEST['user_id'];
+
+        //echo strlen(trim($userID));
+        if($userID == '' || strlen($userID)!= 28){
+            exit();
+        }
 
         $status = checkActivityStatus($testID, $userID);
 
-        if(!$status) {
+
+        if(!$status["id"]) {
             $status = creatNewActivity($testID, $userID);
         }
 
+
+/*
         $status = is_array($status)? $status : 
         array("status" => 1, 
               "id" => 0, 
-              "user_id" => 0,
+              "open_id" => 0,
               "user_name" => '',
               "phone" => '',
               "province" => '',
@@ -33,7 +41,7 @@ class DetailController extends PublicController {
               "room_number" => 0,
               "order_time" => 0,
               "info" => '');
-
+*/
         //  status 0.错误 1.未开始 2.有好友助力 3.完成助力 4.完成提交检测需求 5.可查看报告 
         switch ($status["status"]){
             case 2:
@@ -49,14 +57,14 @@ class DetailController extends PublicController {
                 break;
 
             default:
-                $url = "../detail/detail";
+                $url = "../friend-help/friend-help";
         }
         echo json_encode(array('status'=> 200, 'meta' =>array(
                                                'url'=>$url,
-                                               'user_id'=>$userID,
+                                               'open_id'=>$userID,
                                                'test_id'=>$testID,
-                                               'activity_id'=>$status["id"],
-                                               'ownner_id'=>$status["user_id"],
+                                               'activity_id'=>$status["id"],//////////
+                                               'ownner_id'=>$status["user_id"],//////////
                                                'user_name' => $status["user_name"],
                                                'phone' => $status["phone"],
                                                'province' => $status["province"],

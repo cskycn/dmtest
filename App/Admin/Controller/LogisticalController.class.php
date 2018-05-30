@@ -20,7 +20,7 @@ class LogisticalController extends PublicController{
 		$count= $hander->count();
 
 		$empty = 0;
-		if(count($count) == 0){
+		if($count == 0){
 			$empty = 1;
 		}
 		
@@ -30,21 +30,24 @@ class LogisticalController extends PublicController{
 		$limit=$page*rows;
 		$page_index=$this->page_index($count,$rows,$page);
 
-
+		
+ 
 
 		$list = M()	->table('dm_logistical a, dm_user b, dm_test d')
-						->where('d.id = a.test_id && a.user_id = b.id' )
-						->field('a.id,d.name,b.nick_name,a.send_time,a.send_id,a.recieve_time,a.recieve_id')
+						->where('a.test_id = d.id  && a.user_id = b.id' )
+						->field('a.id,d.name,b.nick_name,a.update_time,a.send_id')
 						->order('a.id desc')
 						->limit($limit,rows)
 						->select(); 
-
+		//print_r($list);
+		
 		$this->assign('page_index',$page_index);
 		$this->assign('page',$page);
 		$this->assign('empty',$empty);	
 		$this->assign('tests',$list);
 		$this->assign('total',$count);
 		$this->display();	
+		
 	}
 
 
@@ -58,9 +61,9 @@ class LogisticalController extends PublicController{
 
 		$res = M()->table('dm_logistical a, dm_user b, dm_test c,dm_activity d')
 				  ->where('b.id = a.user_id && c.id = a.test_id && a.activity_id = d.id' )
-				  ->field('a.id,a.send_id,a.send_time,a.recieve_id,a.recieve_time,b.nick_name,c.name,d.user_name,d.phone,d.room_number')
+				  ->field('a.id,a.send_id,a.update_time,b.nick_name,c.name,d.user_name,d.phone,d.room_number')
 				  ->order('a.id desc')
-				  ->find(); 
+				  ->select(); 
 
 		if(!$res){
 			$this->display('index');
@@ -80,15 +83,22 @@ class LogisticalController extends PublicController{
 	public function doEdit(){
 
 		$con["id"] = trim($_REQUEST["id"]);
-		$data["reply"] = $this->clearhtml(trim($_REQUEST["reply"]));
+		$data["send_id"] = $this->clearhtml(trim($_REQUEST["send_id"]));
 
-		if($data["reply"] == ''){
+		if($data["send_id"] == '0'){
 			echo false;
 			exit;
 		}
 
 		$hander = M('customer');
+		/*对send_id做unique
+		$check["send_id"] = $data["send_id"];
+		if($res1 = $hander->where($check)->select()){
+			
+		}*/
+
 		if($hander->where($con)->save($data)){
+			orderTracesSubByJson($data["send_id"]);
 			echo true;
 			exit;
 		}else{

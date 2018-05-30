@@ -136,8 +136,10 @@ class TestController extends PublicController{
 	public function doEdit(){
 
 		$con["id"] = intval($_POST["tid"]);
+
 		$data["name"] = trim(clearhtml($_POST["name"]));
 		$data["video_url"] = trim(clearhtml($_POST["video_url"]));
+		$data["friend_count"] = intval($_POST["friend_count"]);
 
 		//统一的图片上传信息
 		$exts = array('gif','jpg','jepg','png');
@@ -159,14 +161,19 @@ class TestController extends PublicController{
 			}
 			$data["detail_img_url"] = $hander['save_name'];
 		}
+
+		if($data["friend_count"] <= 0){
+			echo false;
+			return false;
+		}
 		
 		$hander = M('test');
 
-		//
-	/*	if(!$hander->where($con)->save($data)){
+		
+		if(!$hander->where($con)->save($data)){
 			return false;
 		}
-		*/
+		
 		echo true;
 		return true;
 	}
@@ -187,6 +194,7 @@ class TestController extends PublicController{
 
 		$data["name"] = trim($this->clearhtml($_POST["name"]));
 		$data["video_url"] = trim($this->clearhtml($_POST["video_url"]));
+		$data["friend_count"] = intval($_POST["friend_count"]);
 
 		//统一的图片上传信息
 		$exts = array('gif','jpg','jepg','png');
@@ -214,21 +222,22 @@ class TestController extends PublicController{
 			echo false;
 			return false;
 		}
+
+		if($data["friend_count"] <= 0){
+			echo false;
+			return false;
+		}
 		
 		
 		$hander = M('test');
 
-		
-
-	/*	if(!$hander->add($data)){
+		if(!$hander->add($data)){
 			return false;
 		}
 
-		*/
 		echo true;
 		return true;
 	}
 
-	
 	
 }

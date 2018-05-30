@@ -70,7 +70,7 @@ return  array(
     'DB_SLAVE_NO'           =>  '', // 指定从服务器序号
 
     /* 数据缓存设置 */
-    'DATA_CACHE_TIME'       =>  0,      // 数据缓存有效期 0表示永久缓存
+    'DATA_CACHE_TIME'       =>  1800,      // 数据缓存有效期 0表示永久缓存
     'DATA_CACHE_COMPRESS'   =>  false,   // 数据缓存是否压缩缓存
     'DATA_CACHE_CHECK'      =>  false,   // 数据缓存是否校验缓存
     'DATA_CACHE_PREFIX'     =>  '',     // 缓存前缀

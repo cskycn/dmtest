@@ -39,8 +39,8 @@
 	'weixin'=>array(
 
 
-	  'appid' =>'',			//微信appid
-	  'secret'=>'', //微信secret
+	  'appid' =>'wx3bc35842f57a1434',			//微信appid
+	  'secret'=>'d3a0e06c63101cc472a694974b20ac65', //微信secret
 
 	  'mchid' => '',
 	  'key' => '',
@@ -48,7 +48,7 @@
 	  //这里是异步通知页面url，提交到项目的Pay控制器的notifyurl方法；
 	  'notify_url'=>'',
 
-	),
+	)
   );
 
 

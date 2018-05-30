@@ -119,6 +119,13 @@
                                 <input type="text" class="input-text" placeholder="输入检测名" name="name" id="name" value="{$res.name}">
                             </div>
                         </div>
+
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>需要助力几次</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <input type="text" class="input-text" placeholder="输入次数" name="friend_count" id="friend_count" value="{$res.friend_count}">
+                            </div>
+                        </div>
                 
                         <div class="row cl">
                             <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>检测视频</label>
@@ -220,6 +227,7 @@
     function ac_from(){
         var name=$('#name').val();
         var video_url=$('#video_url').val();
+        var friend_count=$('#friend_count').val();
         var cover_img_url=$('#cover_img_url');
         var detail_img_url=$('#detail_img_url');
 
@@ -232,6 +240,14 @@
             alert('请填写视频链接');
             return false;
         }
+
+        var regNum = /^[0-9]*[1-9][0-9]*$/　
+        if(!regNum.test(friend_count.trim())){
+            alert('助力次数请填写正整数');
+            return false;
+        }
+
+        
 
         if(cover_img_url.val() != ""){
             if(!check_img_format(cover_img_url) || !getImageSize(cover_img_url)){

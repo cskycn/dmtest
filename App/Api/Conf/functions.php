@@ -244,7 +244,7 @@ function getUserInfo($ids){
 		$con["id"] = array('in', $ids);
 	}
 	else{
-		$con["id"] = $ids;
+		$con["id"] = intval($ids);
 	}
 
 	$res = M("user")->where($con)->select();
@@ -262,38 +262,55 @@ function getUserInfo($ids){
 //  status 0.错误 1.未开始 2.有好友助力 3.完成助力 4.完成提交检测需求 5.可查看报告 
 //***************************
 function checkActivityStatus($testid, $userid){
-
     if(!$userid || !$testid){
         return false;
         exit();
-    }
-    $con['user_id'] = $userid;
-	$con['test_id'] = $testid;
+	}
+	
+    $con['user_id'] = array('EQ',trim($userid));
+	$con['test_id'] = trim($testid);
 	$hander = M('activity');
+	//$res = M()->query("SELECT * FROM `dm_activity` WHERE ( user_id = ".$userid." && test_id = ".$testid." ) LIMIT 1");
 	$res = $hander->where($con)->find();
+	//$res = $hander->where("`user_id`='".$con["user_id"]."' AND `test_id`='".$con["test_id"]."'")->find();
+
+	//return $hander->getLastSql();
+
 
     if($res && $res != array()){
         return $res;
     }else{
 		return false;
 	}
-	
-    exit();
 }
 
-function creatNewActivity($userid = '' , $testid = '') {  
-	$field["user_id"] = $userid;
-	$field["test_id"] = $testid;
-	$field["status"] = 1;
-	$hander = M('activity');
-	if(is_int($field["user_id"]) && is_int($field["test_id"])) {
-		if($hander->add($field)){
-			$con["user_id"] = $userid;
+
+
+function creatNewActivity($testid,$userid) {  
+	$field["user_id"] = trim($userid);
+	$field["test_id"] = trim($testid);
+//	$field["status"] = 1;
+	$hander = M("activity");
+	
+	if($field["user_id"] != '') {
+		$Model = M();
+        $sql = "INSERT INTO `dm_activity` (`user_id`,`test_id`,`status`) VALUES ('".$field["user_id"]."','".$field["test_id"]."','1')";
+
+		if($Model->execute($sql)){//$hander->add($field)){
+		//	return $field["user_id"] ."     ".$Model->getLastSql();
+		//	exit();
+					
+			//$aa = $Model->getLastSql()."      ";
+			$con["user_id"] = array('EQ',$userid);
 			$con["test_id"] = $testid;
-			if($res = $hander->where($con)->find() && count($res)!=0){
+			if($res = $hander->where($con)->find()){
 				return $res;
+			}else{
+				return false;
 			}
-			return false;
+
+			//return $aa = $aa . $hander->getLastSql()."      ";
+
 		}else{
 			return false;
 		}
@@ -331,19 +348,19 @@ function clearhtml($content) {
 		 	curl_setopt($ch, CURLOPT_URL, $url);
 		 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);   //没有这个会自动输出，不用print_r();也会在后面多个1
 		 	curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-		 }else{
-		//	$url = $url.'?'.http_bulid_query($data);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		 }/*else{
+			$url = $url.'?'.http_bulid_query($data);
 			$ch = curl_init((string)$url);
- 			curl_setopt($ch, CURLOPT_HEADER, false);
+ 			curl_setopt($ch,checkActivityStatus CURLOPT_HEADER, false);
  			curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
  			curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-		 }
+		 }*/
 		 $output = curl_exec($ch);
 		 curl_close($ch);
 		 $out = json_decode($output);
-		 $data = object_array($out);
-		 return $data;
+		 $res = object_array($out);
+		 return $res;
  }
  
  function object_array($array){
@@ -385,3 +402,120 @@ function clearhtml($content) {
 	 }
 	 return $config_list;
  }
+
+
+
+
+function activity_to_status($activity_id){
+	if(is_numeric(trim($activity_id))){
+	   $hander = M('activity');
+	   $con['id'] = $activity_id;
+	   if($res = $hander->where($con)->field('status')->find()){
+		   return $res['status'];
+	   }
+	}
+	return false;	
+}
+
+
+/**
+*
+* 快递鸟订阅推送2.0接口
+*
+* @技术QQ群: 340378554
+* @see: http://kdniao.com/api-follow
+* @copyright: 深圳市快金数据技术服务有限公司
+* 
+* ID和Key请到官网申请：http://kdniao.com/reg
+*/
+
+//电商ID
+defined('EBusinessID') or define('EBusinessID', '1346616');
+//电商加密私钥，快递鸟提供，注意保管，不要泄漏
+defined('AppKey') or define('AppKey', '5b5c5b69-cc9b-48c9-8eb0-00cd11ded3ea');
+//测试请求url
+defined('ReqURL') or define('ReqURL', 'http://140.143.11.136/index.php/api/logistical/getNewLogistical');//'http://testapi.kdniao.cc:8081/api/dist');
+//正式请求url
+//defined('ReqURL') or define('ReqURL', 'http://api.kdniao.cc/api/dist');
+
+//调用获取物流轨迹
+//-------------------------------------------------------------
+/*
+$logisticResult = orderTracesSubByJson();
+echo $logisticResult;
+*/
+//-------------------------------------------------------------
+ 
+/**
+ * Json方式  物流信息订阅
+ */
+function orderTracesSubByJson($send_id){
+	$requestData="{'ShipperCode':'SF',".
+			   "'LogisticCode':'".$send_id."',".
+			   "'Remark':''}";
+	
+	$datas = array(
+        'EBusinessID' => EBusinessID,
+        'RequestType' => '1008',
+        'RequestData' => urlencode($requestData) ,
+        'DataType' => '2',
+    );
+    $datas['DataSign'] = encrypt($requestData, AppKey);
+	$result=sendPost(ReqURL, $datas);	
+	
+	//根据公司业务处理返回的信息......
+	return $result;
+}
+
+/**
+ * 电商Sign签名生成
+ * @param data 内容   
+ * @param appkey Appkey
+ * @return DataSign签名
+ */
+function encrypt($data, $appkey) {
+    return urlencode(base64_encode(md5($data.$appkey)));
+}
+
+
+/**
+ *  post提交数据 
+ * @param  string $url 请求Url
+ * @param  array $datas 提交的数据 
+ * @return url响应返回的html
+ */
+function sendPost($url, $datas) {
+    $temps = array();	
+    foreach ($datas as $key => $value) {
+        $temps[] = sprintf('%s=%s', $key, $value);		
+    }	
+    $post_data = implode('&', $temps);
+    $url_info = parse_url($url);
+	if(empty($url_info['port']))
+	{
+		$url_info['port']=80;	
+	}
+    $httpheader = "POST " . $url_info['path'] . " HTTP/1.0\r\n";
+    $httpheader.= "Host:" . $url_info['host'] . "\r\n";
+    $httpheader.= "Content-Type:application/x-www-form-urlencoded\r\n";
+    $httpheader.= "Content-Length:" . strlen($post_data) . "\r\n";
+    $httpheader.= "Connection:close\r\n\r\n";
+    $httpheader.= $post_data;
+    $fd = fsockopen($url_info['host'], $url_info['port']);
+    fwrite($fd, $httpheader);
+    $gets = "";
+	$headerFlag = true;
+	while (!feof($fd)) {
+		if (($header = @fgets($fd)) && ($header == "\r\n" || $header == "\n")) {
+			break;
+		}
+	}
+    while (!feof($fd)) {
+		$gets.= fread($fd, 128);
+    }
+    fclose($fd);  
+    
+    return $gets;
+}
+
+?>

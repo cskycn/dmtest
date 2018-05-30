@@ -27,12 +27,14 @@ class TestController extends PublicController {
         $submit = $_REQUEST['submit'];
 
         
-        $submit["user_id"] = intval($submit['userid']);
+        $submit["user_id"] = $submit['userid'];
         $submit["test_id"] = intval($submit['testid']);
         $submit["activity_id"] = intval($submit['activity_id']);
 
         $submit["user_name"] = trim($submit['username']);
         $submit["phone"] = trim($submit['phone']);
+
+        $submit["code"] = trim($submit['verify_code']);
         $submit["address"] = trim($submit['address']);
         $submit["room_number"] = trim($submit['roomnumber']);
         $submit["info"] = trim($submit['info']);
@@ -76,12 +78,18 @@ class TestController extends PublicController {
             $this->errorMsg($statusCode,$errorMsg);
             exit();
         }
-
         
         
         if($this->checkResultExisted($submit["activity_id"])){
             $statusCode = 302;
             $errorMsg = '你已提交过';
+            $this->errorMsg($statusCode,$errorMsg);
+            exit();
+        }
+
+        if($this->checkSmsCode($submit["phone"],$submit["code"])){
+            $statusCode = 304;
+            $errorMsg = '短信验证码不对';
             $this->errorMsg($statusCode,$errorMsg);
             exit();
         }
@@ -202,7 +210,7 @@ class TestController extends PublicController {
         //======================
         //提交所需信息
         //======================
-        $submit["user_id"] = intval($_POST['userid']);
+        $submit["user_id"] = $_POST['userid'];
         $submit["test_id"] = intval($_POST['testid']);
 
         if($submit["user_id"] == '' || $submit["test_id"] == ''){
@@ -242,6 +250,19 @@ class TestController extends PublicController {
             return false;
         }
     }
+
+    //***************************
+    //  检测短信验证码对不对
+    //***************************
+    private function checkSmsCode(){
+        
+        
+    }
+
+
+
+
+    
 /*
     //***************************
     //  这个检测是否有结果
@@ -290,5 +311,20 @@ class TestController extends PublicController {
             exit();
         }   
     }
+
+    //***************************
+	//  获取对应活动的状态
+    //***************************
+    public function getStatus(){
+		$aid = intval($_POST["activity_id"]);
+        $data['status'] = activity_to_status($aid);
+        if($data['status']){
+            echo json_encode(array('status'=> 200, 'meta'=>$res));
+            exit();
+        }else{
+            echo json_encode(array('status'=> 301, 'msg'=>'获取状态失败'));
+            exit();
+        }
+	}
 
 }

@@ -116,10 +116,8 @@
                                        <td style="width:120px;">姓名</td>
                                        <td style="width:120px;">手机号</td>
                                        <td style="width:120px;">房间数</td>
-                                       <td style="width:120px;">发货时间</td>
-                                       <td style="width:120px;">发货运单号</td>
-                                       <td style="width:120px;">用户发货时间</td>
-                                       <td style="width:120px;">收货运单号</td>
+                                       <td style="width:120px;">更新时间</td>
+                                       <td style="width:120px;">运单号</td>
                                        <td style="width:120px;">操作</td>
                                      </tr>
                                      <tbody id="news_option">
@@ -136,10 +134,8 @@
                                            <td>{$v.user_name}</td>
                                            <td>{$v.phone}</td>
                                            <td>{$v.room_number}</td>
-                                           <td>{$v.send_time}</td>
+                                           <td>{$v.update_time}</td>
                                            <td>{$v.send_id}</td>
-                                           <td>{$v.revieve_time}</td>
-                                           <td>{$v.revieve_id}</td>
                                            <td><a onclick="edit_id_urls({$v.id})">编辑</a></td>
                                         </tr>
                                      </volist>
@@ -208,7 +204,7 @@
     }
 
     $(document).ready(function(){
-        $(".self-table-content td:nth-child(6), .self-table-content td:nth-child(8)").each(function(){
+        $(".self-table-content td:nth-child(6)").each(function(){
             var res =timestampToTime($(this).val());
             $(this).html(res);
         });
