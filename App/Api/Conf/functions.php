@@ -349,18 +349,18 @@ function clearhtml($content) {
 		 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);   //没有这个会自动输出，不用print_r();也会在后面多个1
 		 	curl_setopt($ch, CURLOPT_POST, 1);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-		 }/*else{
-			$url = $url.'?'.http_bulid_query($data);
+		 }else{
+			//$url = $url.'?'.http_bulid_query($data);
 			$ch = curl_init((string)$url);
- 			curl_setopt($ch,checkActivityStatus CURLOPT_HEADER, false);
+ 			curl_setopt($ch, CURLOPT_HEADER, false);
  			curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
  			curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-		 }*/
+		 }
 		 $output = curl_exec($ch);
 		 curl_close($ch);
-		 $out = json_decode($output);
-		 $res = object_array($out);
-		 return $res;
+		 $out = json_decode($output,true); 
+//		 $res = object_array($out);
+		 return $out;
  }
  
  function object_array($array){

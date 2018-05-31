@@ -254,14 +254,16 @@ class TestController extends PublicController {
     //***************************
     //  检测短信验证码对不对
     //***************************
-    private function checkSmsCode(){
-        
-        
+    private function checkSmsCode($mobile,$code){
+        $tmp = S('sms_' . $mobile);
+        if($tmp){
+            $gap = time() - (int)$tmp["time"];
+            if($gap <= 60 && $tmp["code"] == trim($code)){
+                return true;
+            }
+        }
+        return false;
     }
-
-
-
-
     
 /*
     //***************************

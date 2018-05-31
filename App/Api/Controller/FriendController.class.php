@@ -20,15 +20,9 @@ class FriendController extends PublicController {
         $statusCode = 500;
         $errorMsg = '提交信息有误';
 
-        //======================
-        //提交所需信息
-        //======================
         $submit["user_id"] = $_POST['userid'];
         $submit["activity_id"] = intval($_POST['activity_id']);
-
-        //======================
-        //判断信息是否合法
-        //======================
+        $submit["openid"] = $_POST['openid'];
 
         if($submit["user_id"] == '' || $submit["activity_id"] == ''){
             $statusCode = 301;
@@ -37,8 +31,22 @@ class FriendController extends PublicController {
             exit();
         }
 
-        if($this->checkHelpExisted($submit["user_id"],$submit["activity_id"])){
+        if($this->checkIsComplete($submit["activity_id"])){
             $statusCode = 302;
+            $errorMsg = '助力已完成';
+            $this->errorMsg($statusCode,$errorMsg);
+            exit();
+        }
+
+        if(!$this->isWatchedGongZhongHao($submit["openid"])){
+            $statusCode = 303;
+            $errorMsg = "未关注公众号";
+            echo json_encode(array('status'=> $statusCode, 'msg'=>$errorMsg));
+            exit();
+        }
+
+        if($this->checkHelpExisted($submit["user_id"],$submit["activity_id"])){
+            $statusCode = 304;
             $errorMsg = '你已助力过了';
             $this->errorMsg($statusCode,$errorMsg);
             exit();
@@ -50,7 +58,7 @@ class FriendController extends PublicController {
             echo json_encode(array('status'=> $statusCode, 'msg'=>$errorMsg));
             exit();
         }else{
-            $statusCode = 303;
+            $statusCode = 305;
             $errorMsg = '好友助力失败';
             $this->errorMsg($statusCode,$errorMsg);
             exit();
@@ -92,18 +100,8 @@ class FriendController extends PublicController {
         $statusCode = 500;
         $errorMsg = '提交信息有误';
 
-        //======================
-        //提交所需信息
-        //======================
-      /*  $submit["user_id"] = intval($_POST['userid']);
-        $submit["test_id"] = intval($_POST['testid']);
-        */
         $submit["activity_id"] = intval($_POST['activity_id']);
         $submit["ownner_id"] = $_POST['ownner_id'];
-
-        //======================
-        //判断信息是否合法
-        //======================
 
         if(trim($submit["activity_id"]) == '' || !is_int($submit["activity_id"])){
             $statusCode = 301;
@@ -204,6 +202,7 @@ class FriendController extends PublicController {
         if(!$userID || !$activityID){
             return false;
         }
+
         $con = array();
         $con['activity_id'] = $activityID;
         $hander = M('friendhelp');
@@ -223,7 +222,6 @@ class FriendController extends PublicController {
 
             if($hander->where($con)->save(array("friend_ids" => $res["friend_ids"],"count" => $res["count"]))){ 
 
-
                 //检查是不是达到了助力标准
                 $afterRes = $hander->where($con)->field("count")->find();
                 $total = $this->getTestFriendTargetCount($activityID);
@@ -234,19 +232,8 @@ class FriendController extends PublicController {
                     $res["status"] = 2;
                 }
                 
-                /*
-                $afterRes = $hander->where($con)->field("friend_ids")->find();
-                if($friendCount = getExplodeCount($afterRes["friend_ids"],",")){
-
-                    $total = $this->getTestFriendTargetCount($activityID);
-                    if($total != 0  && $friendCount >=  $total){
-                        $res["status"] = 3;
-                    }else if($friendCount > 0 && $friendCount < $total){
-                        $res["status"] = 2;
-                    }
-                } */
                 $hander->where($con)->save(array("status" => $res["status"]));
-                return true;
+                return true; //助力成功
             }else{
                 return false;
             }
@@ -270,5 +257,54 @@ class FriendController extends PublicController {
         }else{
             return 0;
         }
+    }
+
+    //***************************
+    //  检测助力是否已经完成
+    //***************************
+    private function checkIsComplete($activityID){
+        $activityID = intval($activityID);
+
+        $res = M('activity')->where(array("id"=>$activityID))->find();
+       /* $res = M()->table('dm_activity a, dm_test b')
+        ->where("b.id = a.test_id && a.id=" . $activityID)
+        ->field('a.count,b.friend_count')
+        ->find(); */
+        if($res){
+            if($res["status"] >= 3){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    protected function isWatchedGongZhongHao($userID){
+        $access_token = $this->_getAccessToken($userID);
+        $subscribe_msg = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$access_token.'&openid='.$userID;
+        $subscribe = get_http_array("get",$subscribe_msg);
+        if($subscribe["subscribe"]){
+            $zyxx = $subscribe["subscribe"];
+            if ($zyxx !== 1) {
+                return false;
+              }else{
+                  return true;
+              }
+        }
+        return false;
+    }
+
+    private function _getAccessToken($userID) {
+
+        $appID = '';
+        $appSecret = '';
+
+        $url_get = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$appID.'&secret='.$secret;
+        $json = get_http_array("get",$url_get);
+        if($json["access_token"]){
+            return $json["access_token"];
+        }
+        return false;
     }
 }

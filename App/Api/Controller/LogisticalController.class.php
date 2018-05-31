@@ -57,7 +57,7 @@ class LogisticalController extends PublicController {
 	//  调用快递鸟api接收物流信息更新
 	//***************************
     public function getNewLogistical(){
-        $res = json_decode($_REQUEST["RequestData"]);
+        $res = json_decode($_REQUEST["RequestData"],true);
         if(array_key_exists("data",$res) && array_key_exists("EBusinessID",$res) && $res["EBusinessID"] == '1346616'){
             $data = $res["data"];
 
