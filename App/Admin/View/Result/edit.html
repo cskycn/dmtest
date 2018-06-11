@@ -1,0 +1,343 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="Bookmark" href="/favicon.ico" >
+    <link rel="Shortcut Icon" href="/favicon.ico" />
+    <script type="text/javascript" src="__PUBLIC__/admin/js/action.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/admin/js/jquery.js"></script>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="__PUBLIC__/admin/lib/html5shiv.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/admin/lib/respond.min.js"></script>
+
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/admin/static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/admin/static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/admin/static/h-ui.admin/css/style.css" />
+    <link href="__PUBLIC__/admin/css/main.css" rel="stylesheet" type="text/css" />
+
+    <!--[if IE 6]>
+    <script type="text/javascript" src="__PUBLIC__/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <style type="text/css">
+        .Hui-article-box {
+            position: absolute;
+            top: 10px;
+            right: 0;
+            bottom: 0;
+            left: 199px;
+            overflow: hidden;
+            z-index: 1;
+            background-color: #fff;
+        }
+
+        .result-key .input-text{
+            display:inline-block;
+            width:100px;
+            margin-left:20px;
+        }
+
+    </style>
+    <title>丁妈后台管理系统</title>
+</head>
+<body>
+<header class="navbar-wrapper">
+    <div class="navbar navbar-fixed-top">
+        <div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="#">丁妈后台管理系统</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="">H-ui</a>
+
+
+            <nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
+                <ul class="cl">
+                    <li><?php echo $_SESSION['admininfo']['name']; ?></li>
+                    <li><a href="{:U('Login/logout')}">退出</a></li>
+
+
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<aside class="Hui-aside">
+        <div class="menu_dropdown bk_2">
+                <dl id="general">
+                    <dt><a href="{:U('index/index')}" ><i class="Hui-iconfont">&#xe616;</i> 系统概览</a></dt>
+                </dl>
+        
+                <dl id="general">
+                        <dt><a href="{:U('test/index')}" ><i class="Hui-iconfont">&#xe616;</i> 检测管理</a></dt>
+                </dl>
+        
+                <dl id="general">
+                    <dt><a href="{:U('order/index')}" ><i class="Hui-iconfont">&#xe616;</i> 用户预约查询</a></dt>
+                </dl>
+        
+                <dl id="general">
+                    <dt><a href="{:U('logistical/index')}" ><i class="Hui-iconfont">&#xe616;</i> 用户物流管理</a></dt>
+                </dl>
+            
+                <dl id="general">
+                    <dt><a href="{:U('result/index')}" ><i class="Hui-iconfont">&#xe616;</i> 用户检测结果</a></dt>
+                </dl>
+        
+                <dl id="general">
+                    <dt><a href="{:U('friend/index')}" ><i class="Hui-iconfont">&#xe616;</i> 好友助力统计</a></dt>
+                </dl>
+                
+                <dl id="general">
+                    <dt><a href="{:U('message/index')}" ><i class="Hui-iconfont">&#xe616;</i> 用户留言管理</a></dt>
+                </dl>
+
+                <dl id="general">
+                        <dt><a href="{:U('notice/index')}" ><i class="Hui-iconfont">&#xe616;</i> 消息推送</a></dt>
+                    </dl>
+                
+        </div>
+    
+</aside> 
+
+
+<section class="Hui-article-box">
+
+    <div id="iframe_box" class="Hui-article">
+        <div class="show_iframe">
+                <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 管理后台 <span class="c-gray en">&gt;</span> 检测报告 <span class="c-gray en">&gt;</span> 报告编辑 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+                <div class="page-container">
+                    <form id="the-form" class="form form-horizontal" action="{:U('doEdit')}" method="post" onsubmit="return ac_from();" enctype="multipart/form-data">
+                        <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-3">预约ID</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                    <input type="text" class="input-text" readonly="readonly"  name="aid" id="aid" value="{$res.id}">
+                                </div>
+                            </div>
+
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-3">检测名</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <input type="text" class="input-text" disabled="disabled"  name="name" id="name" value="{$res.name}">
+                            </div>
+                        </div>
+
+                        <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-3">用户名</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                    <input type="text" class="input-text" disabled="disabled"  name="user_name" id="user_name" value="{$res.user_name}">
+                                </div>
+                        </div>
+            
+
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-3">装修时间</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <input id="decorate_time" name="decorate_time" type="date" value="{$res.decorate_time}"/>
+                            </div>
+                        </div>
+
+                        <if condition="($res.upload_img_urls neq '')">
+                                
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-3">已上传图片</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <volist name="images_display" id="vo">
+                                    <image src="__PUBLIC__/home/images/result/result/{$vo}" style="display:inline-block;width:100px;height:100px;margin-right:20px;"></image>
+                                </volist>
+                            </div>
+                        </div>
+                        </if>
+                        
+   
+                
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-3">上传图片1</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <input  type="file" name="image1" id="image1" value="">
+                            </div>
+                        </div>
+
+                        <div class="row cl">
+                                <label class="form-label col-xs-4 col-sm-3">上传图片2</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                    <input  type="file" name="image2" id="image2" value="">
+                                </div>
+                            </div>
+
+                            <div class="row cl">
+                                    <label class="form-label col-xs-4 col-sm-3">上传图片3</label>
+                                    <div class="formControls col-xs-8 col-sm-3">
+                                        <input  type="file" name="image3" id="image3" value="">
+                                    </div>
+                                </div>
+
+                        <div class="row cl result-key">
+                                <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>检测结果1</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                    <input type="text" class="input-text" placeholder="检测项名称" name="item1" id="item1" value="{$res.test_1}">
+                                    <input type="text" class="input-text" placeholder="检测结果" name="result1" id="result1" value="{$res.result_1}">
+                                </div>
+                        </div>
+
+                        <div class="row cl result-key">
+                                <label class="form-label col-xs-4 col-sm-3">检测结果2</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                        <input type="text" class="input-text"  placeholder="检测项名称" name="item2" id="item2" value="{$res.test_2}">
+                                        <input type="text" class="input-text" placeholder="检测结果" name="result2" id="result2" value="{$res.result_2}">
+                                </div>
+                        </div>
+
+                        <div class="row cl result-key">
+                                <label class="form-label col-xs-4 col-sm-3">检测结果3</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                        <input type="text" class="input-text" placeholder="检测项名称" name="item3" id="item3" value="{$res.test_3}">
+                                        <input type="text" class="input-text" placeholder="检测结果" name="result3" id="result3" value="{$res.result_3}">
+                                </div>
+                        </div>
+
+                        <div class="row cl result-key">
+                                <label class="form-label col-xs-4 col-sm-3">检测结果4</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                        <input type="text" class="input-text" placeholder="检测项名称" name="item4" id="item4" value="{$res.test_4}">
+                                        <input type="text" class="input-text" placeholder="检测结果" name="result4" id="result4" value="{$res.result_4}">
+                                </div>
+                        </div>
+
+                        <div class="row cl result-key">
+                                <label class="form-label col-xs-4 col-sm-3">检测结果5</label>
+                                <div class="formControls col-xs-8 col-sm-3">
+                                        <input type="text" class="input-text" placeholder="检测项名称" name="item5" id="item5" value="{$res.test_5}">
+                                        <input type="text" class="input-text" placeholder="检测结果" name="result5" id="result5" value="{$res.result_5}">
+                                </div>
+                        </div>
+                
+                        <div class="row cl">
+                            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                                <input class="btn btn-primary radius" type="submit" name="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                                <input type="hidden" name="adv_id" id="adv_id" value="<?php echo $adv_info['id']; ?>">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+        </div>
+    </div>
+</section>
+
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="__PUBLIC__/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__PUBLIC__/admin/lib/jquery.contextmenu/jquery.contextmenu.r2.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        /** 验证是否成功  */  
+        $("#the-form").ajaxForm(function(data){    
+            console.log(data);
+            if(data == true){  
+                alert("提交成功");  
+                location.href = "index";
+            }else{
+                alert("提交出错");
+            }  
+        });       
+    });
+
+    function check_img_format (obj){
+        
+        if(!/\.(jpg|jpeg|png|JPG|PNG)$/.test(obj.val())){
+            
+            return false;
+        }
+    }
+
+    function getImageSize(obj, imgWidth = 100, imgHeight = 100) {  
+        alert("b");
+        var url, image;  
+        if (obj.files) {  
+            if (window.navigator.userAgent.indexOf("MSIE") >= 1) {  
+                obj.select();  
+                url = document.selection.createRange().text;  
+            }  
+            url = window.URL.createObjectURL(obj.files[0]);  
+        } else {  
+            url = obj.value;  
+            url = "file:///" + url;  
+        }  
+        image = new Image();  
+        image.src = url;  
+        image.onload = function() {  
+            if (image.width != imgWidth || image.height != imgHeight) {  
+                alert("请上传尺寸为" + imgWidth +"*" + imgHeight +"的图片！");  
+                return false;
+            }else{  
+                return true;
+            }  
+        };  
+    }  
+
+
+    function ac_from(){
+        var decorate_time=$('#decorate_time').val();
+        var item1=$('#item1').val().trim();
+        var item2=$('#item2').val().trim();
+        var item3=$('#item3').val().trim();
+        var item4=$('#item4').val().trim();
+        var item5=$('#item5').val().trim();
+        var result1=$('#result1').val().trim();
+        var result2=$('#result2').val().trim();
+        var result3=$('#result3').val().trim();
+        var result4=$('#result4').val().trim();
+        var result5=$('#result5').val().trim();
+
+        if(item1.length == 0 && item2.length == 0 && item3.length == 0 && item4.length == 0 && item5.length == 0){
+            alert('请至少输入一个检测结果');
+            return false;
+        }
+
+        if(item1.length != 0 && result1.length == 0){
+            alert('请输入检测项目1的结果');
+            return false;
+        }
+        if(item2.length != 0 && result2.length == 0){
+            alert('请输入检测项目2的结果');
+            return false;
+        }
+        if(item3.length != 0 && result3.length == 0){
+            alert('请输入检测项目3的结果');
+            return false;
+        }
+        if(item4.length != 0 && result4.length == 0){
+            alert('请输入检测项目4的结果');
+            return false;
+        }
+        if(item5.length != 0 && result5.length == 0){
+            alert('请输入检测项目5的结果');
+            return false;
+        }
+
+        /*
+
+        if(cover_img_url.val() != ""){
+            if(!check_img_format(cover_img_url) || !getImageSize(cover_img_url)){
+                alert("图片类型或者尺寸不合适")
+                return false;
+            }
+        }
+
+        */
+
+    }
+
+</script>
+
+</body>
+</html>

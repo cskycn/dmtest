@@ -13,8 +13,8 @@ class MessageController extends PublicController {
     //  提交留言信息
     //***************************
     public function submitMessage(){
-        $con["user_id"] = $_REQUEST['user_id'];
-        $con["content"] = trim(clearhtml($_REQUEST['content']));
+        $con["user_id"] = I('request.user_id');
+        $con["content"] = I('request.content');
         $con["create_time"] = time();
 
         if(M ('customer')->add ($con)){
@@ -56,7 +56,7 @@ class MessageController extends PublicController {
             $hander = M('customer')->select();
         }else{
             //只获取对应用户的留言
-            $con["user_id"] = $user_id;
+            $con["user_id"] = array('EQ',$user_id);
             $hander = M('customer')->where($con)->select();
         }
         return $hander;
@@ -67,12 +67,10 @@ class MessageController extends PublicController {
     //  用户是否有未读消息
     //***************************
     public function checkRead(){
-        $con["user_id"] = $_REQUEST['user_id'];
+        $con["user_id"] = I('request.user_id');
 
         $con["is_read"] = '0';
         $con['reply'] = array('NEQ','');  
-
-
 
         /////////////这里需要再增加判断，用户在前端打开我的消息的时间最新的，和最新的系统消息对比
 
@@ -98,17 +96,17 @@ class MessageController extends PublicController {
     //  获取全部系统消息
     //***************************
     public function getAllMyNotice(){
-        $con["user_id"] = $_REQUEST['user_id'];
+        $con["user_id"] = I('request.user_id');
         $con['reply'] = array('NEQ','');  
 
         $noticeCon["status"] = 1;
 
-        $customer = M('customer')->where($con)->select();
+        //$customer = M('customer')->where($con)->select();
         $notice = M('notice')->where($noticeCon)->select();
-        $c_constomer = count($customer);
-        $c_notice = count($notice);
+        //$c_constomer = count($customer);
+        //$c_notice = count($notice);
 
-        $data = array();
+        /*$data = array();
         if($c_constomer!=0){
             for($i = 0; $i < $c_constomer; $i++){
                 $tmp = array();
@@ -131,32 +129,43 @@ class MessageController extends PublicController {
 
         usort($data, function($a, $b) {
             return ($a['time'] < $b['time'])?1:-1;
-        });
+        });*/
 
-        echo json_encode(array('status'=> '200', 'meta'=>$data));
-        exit();
+        if($notice){
+            echo json_encode(array('status'=> '200', 'meta'=>$notice));
+            exit();
+        }else{
+            $statusCode = 301;
+            $errorMsg = '没有通知';
+            $this->errorMsg($statusCode,$errorMsg);
+        }
     }
 
     //***************************
     //  更新用户读消息时间
     //***************************
     public function freshMessageReadTime(){ 
-        $uid = $_REQUEST['user_id'];
+        $uid = I('request.user_id');
         $data["time"] = time();
         M('isread')->where("uid='$uid'")->save($data);
     }
 
 
     //***************************
-    //  更新用户读消息时间
+    //  获取用户是否有未读消息
     //***************************
     public function getNewMessageIsRead(){ 
-        $statusCode = 200;
-        $uid = $_REQUEST['user_id'];
+        $uid = I('request.user_id');
         if($res = M('isread')->where("uid='$uid'")->find()){
             $notice = M('notice') ->order('ctime desc') -> find();
+            if($notice["ctime"] < $res["time"]){
+                //有未读消息
+                $data["isRead"] = 1;
+                echo json_encode(array('status'=> 200, 'meta'=>$data));
+                exit();
+            }
 
-            $con["uid"]= $uid;
+          /*  $con["uid"]= $uid;
             $con["reply"] = array('NEQ','');
             $message = M('customer') ->where($con) -> order('reply_time desc')->find();
 
@@ -169,11 +178,12 @@ class MessageController extends PublicController {
             }else{
                 $data["isRead"] = 1;
                 echo json_encode(array('status'=> $statusCode, 'meta'=>$data));
-            }
-        }else{
-            $data["isRead"] = 0;
-            echo json_encode(array('status'=> $statusCode, 'meta'=>$data));
+            }*/
         }
+
+        $data["isRead"] = 0;
+        echo json_encode(array('status'=> 200, 'meta'=>$data));
+        exit();
     }
 
     

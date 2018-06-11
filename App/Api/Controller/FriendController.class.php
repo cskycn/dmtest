@@ -20,9 +20,9 @@ class FriendController extends PublicController {
         $statusCode = 500;
         $errorMsg = '提交信息有误';
 
-        $submit["user_id"] = $_POST['userid'];
-        $submit["activity_id"] = intval($_POST['activity_id']);
-        $submit["openid"] = $_POST['openid'];
+        $submit["user_id"] = I('post.userid');
+        $submit["activity_id"] = intval(I('post.activity_id'));
+        $submit["openid"] = I('post.openid');
 
         if($submit["user_id"] == '' || $submit["activity_id"] == ''){
             $statusCode = 301;
@@ -100,8 +100,8 @@ class FriendController extends PublicController {
         $statusCode = 500;
         $errorMsg = '提交信息有误';
 
-        $submit["activity_id"] = intval($_POST['activity_id']);
-        $submit["ownner_id"] = $_POST['ownner_id'];
+        $submit["activity_id"] = intval(I('request.activity_id'));
+        $submit["ownner_id"] = I('request.ownner_id');
 
         if(trim($submit["activity_id"]) == '' || !is_int($submit["activity_id"])){
             $statusCode = 301;
@@ -115,9 +115,10 @@ class FriendController extends PublicController {
         $ownner = array();
 
         if($res = $hander->where($con)->find()){
+
             $ownner["user_id"] = $res["open_id"];
             $ownner["nick_name"] = $res["nick_name"];
-            $ownner["avatar_url"] = $res["avatarUrl"];
+            $ownner["avatar_url"] = $res["avatarurl"];
         }else{
             $statusCode = 303;
             $errorMsg = '查询活动失败';
@@ -141,8 +142,14 @@ class FriendController extends PublicController {
             $userList = array();
         }
 
-        $con1["id"] = $submit["activity_id"];
-        $testInfo = M('activity')->where($con1)->field("id,test_id,user_id")->find();
+      //  $con1["id"] = $submit["activity_id"];
+      //  $testInfo = M('activity')->where($con1)->field("id,test_id,user_id")->find();
+
+        $testInfo = M()->table('dm_activity a, dm_test b')
+							   ->where('a.id = '.$submit["activity_id"] . ' && a.test_id = b.id' )
+							   ->field('a.id,a.test_id,a.user_id,b.person_count,b.group_count,a.order_type')
+							   ->order('b.id desc')
+							   ->find(); 
 
         if($testInfo){
             $num = count($userList);
@@ -207,6 +214,8 @@ class FriendController extends PublicController {
         $con['activity_id'] = $activityID;
         $hander = M('friendhelp');
         $res = $hander->where($con)->field("friend_ids,status,count")->find();
+        $order = M('activity')->where(array('id'=>$activityID))->find();
+        $order_type = $order["order_type"];
 
         if($res){
             if($res["status"] == 1 || $res["status"] == 2){
@@ -224,7 +233,7 @@ class FriendController extends PublicController {
 
                 //检查是不是达到了助力标准
                 $afterRes = $hander->where($con)->field("count")->find();
-                $total = $this->getTestFriendTargetCount($activityID);
+                $total = $this->getTestFriendTargetCount($activityID,$order_type);
 
                 if(/*$total != 0  &&*/ $afterRes["count"] >=  $total){
                     $res["status"] = 3;
@@ -246,7 +255,7 @@ class FriendController extends PublicController {
     //***************************
     //  获取对应检测需要的目标好友数
     //***************************
-    private function getTestFriendTargetCount($activityID){
+    private function getTestFriendTargetCount($activityID,$order_type){
         $activityID = intval($activityID);
         $res = M()->table('dm_activity a, dm_test b')
         ->where("b.id = a.test_id && a.id=" . $activityID)

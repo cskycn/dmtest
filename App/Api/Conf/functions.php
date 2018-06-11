@@ -186,17 +186,18 @@ function checkPhone($submit) {
 	}
 }
 
-function checkOrderTime($submit){
+function checkOrderTime($order_time){
 	//时间戳合法
-	if(array_key_exists("order_time",$submit)) {
-		if(!is_int($submit["order_time"])){  
-			return false;
-		}else{
-			return true;
-		}
-	}else{
-		return true;
-	}
+	$timeArr = explode("-",$order_time);
+
+        if(is_array($timeArr) && count($timeArr) == 3){
+            if(intval($timeArr[0]) > 1970 && intval($timeArr[0]) < 2030 
+               && intval($timeArr[1]) > 0 && intval($timeArr[1]) < 13
+               && intval($timeArr[2]) > 0 && intval($timeArr[2]) < 32){
+                	return $res = ($order_time + '08:00:00');
+			}
+        }
+        return false;
 }
 
 function checkRoomResult($submit){
@@ -261,21 +262,21 @@ function getUserInfo($ids){
 //  检查该用户的这个检测进度   
 //  status 0.错误 1.未开始 2.有好友助力 3.完成助力 4.完成提交检测需求 5.可查看报告 
 //***************************
-function checkActivityStatus($testid, $userid){
-    if(!$userid || !$testid){
+function checkActivityStatus($testid, $userid,$order_type){
+    if(!$userid || !$testid || !$order_type){
         return false;
         exit();
 	}
 	
     $con['user_id'] = array('EQ',trim($userid));
 	$con['test_id'] = trim($testid);
+	$con['order_type'] = (int)$order_type;
 	$hander = M('activity');
 	//$res = M()->query("SELECT * FROM `dm_activity` WHERE ( user_id = ".$userid." && test_id = ".$testid." ) LIMIT 1");
 	$res = $hander->where($con)->find();
 	//$res = $hander->where("`user_id`='".$con["user_id"]."' AND `test_id`='".$con["test_id"]."'")->find();
 
 	//return $hander->getLastSql();
-
 
     if($res && $res != array()){
         return $res;
@@ -284,38 +285,49 @@ function checkActivityStatus($testid, $userid){
 	}
 }
 
+//***************************
+//  创建一个新的activity
+//  status 0.错误 1.未开始 2.有好友助力 3.完成助力 4.完成提交检测需求 5.可查看报告 
+//***************************
 
-
-function creatNewActivity($testid,$userid) {  
+function creatNewActivity($testid,$userid,$order_type) {  
 	$field["user_id"] = trim($userid);
 	$field["test_id"] = trim($testid);
+	$field['order_type'] = $order_type;
 //	$field["status"] = 1;
 	$hander = M("activity");
 	
-	if($field["user_id"] != '') {
-		$Model = M();
-        $sql = "INSERT INTO `dm_activity` (`user_id`,`test_id`,`status`) VALUES ('".$field["user_id"]."','".$field["test_id"]."','1')";
 
-		if($Model->execute($sql)){//$hander->add($field)){
-		//	return $field["user_id"] ."     ".$Model->getLastSql();
-		//	exit();
-					
-			//$aa = $Model->getLastSql()."      ";
-			$con["user_id"] = array('EQ',$userid);
-			$con["test_id"] = $testid;
+	//return checkUserHasTest($field["user_id"],$field["test_id"],$field["order_type"]);
+	
+	if($field["user_id"] != '' && !checkUserHasTest($field["user_id"],$field["test_id"],$field["order_type"])) {
+		$Model = M();
+		$sql = "INSERT INTO `dm_activity` (`user_id`,`test_id`,`status`,`order_type`) VALUES ('".$field["user_id"]."','".$field["test_id"]."','1','".$field["order_type"]."')";
+
+		if($Model->execute($sql)){
+			$con["user_id"] = array('EQ',$field["user_id"]);
+			$con["test_id"] = $field["test_id"];
+			$con["order_type"] = $field['order_type'];
 			if($res = $hander->where($con)->find()){
 				return $res;
-			}else{
-				return false;
 			}
-
-			//return $aa = $aa . $hander->getLastSql()."      ";
-
-		}else{
-			return false;
 		}
 	}
 	return false;
+}
+
+
+//***************************
+//  是否user创建了这个test 的activity
+//***************************
+function checkUserHasTest($userid,$testid,$order_type){
+	$con["order_type"] = array('EQ',$order_type);
+	$con["test_id"] = $testid;
+	$con["user_id"] = array('EQ',$userid);
+	
+	$hander = M('activity');
+	$res = $hander->where($con)->find();
+	return $res;//$hander->getLastSql();
 }
 
 //php 去除html标签 js 和 css样式 - 最爱用的一个PHP清楚html格式函数

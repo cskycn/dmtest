@@ -105,6 +105,12 @@
                 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理后台 <span class="c-gray en">&gt;</span> 管理首页 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
                 <div class="page-container">
                         <div class="aaa_pts_show_1">【 预约管理 】</div>
+                        <div class="search">
+                            <form action="{:U('index')}" method="post"  enctype="multipart/form-data">
+                                <input type="text" class="input-text" placeholder="搜索用户名" name="search" id="search" style="width:200px;margin:auto 15px;"/>
+                                <input class="btn btn-primary radius" type="submit" name="submit" value="&nbsp;&nbsp;搜索&nbsp;&nbsp;">
+                            </form> 
+                        </div>
     
                         <div class="aaa_pts_show_2">
                             
@@ -117,16 +123,14 @@
                                    <td style="width:120px;">姓名</td>
                                    <td style="width:120px;">联系电话</td>
                                    <td style="width:120px;">地址详情</td>
-                                   <td style="width:120px;">房间数</td>
-                                   <td style="width:120px;">预约时间</td>
                                    <td style="width:120px;">留言信息</td>
-                                   <td style="width:180px;">操作</td>
+                                  <!-- <td style="width:180px;">操作</td>  -->
                                  </tr>
                                  <tbody id="news_option">
                                  <!-- 遍历 -->
                                 <if condition="($empty eq 1)"> 
                                     <tr>
-                                        <td colspan='11'>没有数据</td>
+                                        <td colspan='8'>没有数据</td>
                                     </tr>
                                 </if>
                                 <volist name="tests" id="v">
@@ -138,20 +142,20 @@
                                        <td>{$v.user_name}</td>
                                        <td>{$v.phone}</td>
                                        <td>{$v.address}</td>
-                                       <td>{$v.room_number}</td>
-                                       <td>{$v.order_time}</td>
                                        <td>{$v.info}</td>
-                                       <td><a onclick="edit_id_urls({$v.id},{$page})">编辑</a></td>
+                            <!--           <td><a onclick="edit_id_urls({$v.id},{$page})">编辑</a></td>  -->
                                     </tr>
                                  </volist>
                             
                                  <!-- 遍历 -->
                                  </tbody>
+                                 <if condition="(!$search)"> 
                                  <tr>
-                                        <td colspan="11" class="td_2">
+                                        <td colspan="8" class="td_2">
                                             {$page_index} 
                                         </td>
                                     </tr>
+                                </if>
                               </table>
                             
                         </div>
@@ -173,64 +177,12 @@
     function product_option(page){
         let url='?page='+page;
         location=url;
-    }/*
-
-    function del_id_urls (itemID) {
-        if (confirm('您确定要删除吗？')) {
-
-            $.get('del', { 'activity_id': itemID },
-                function(data){
-                    if(data == true){
-                        $(".pro_3 tr[data-id='"+itemID+"']").remove();
-                        alert("删除成功");
-                        
-                    }else{
-                        alert("删除失败");
-                    }
-                }
-            );
-        };
-    }*/
+    }
 
     function edit_id_urls (itemID) {
         location.href="{:U('order/edit')}?activity_id="+itemID;
     }
-
-    function timestampToTime(timestamp) {
-        var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
-        Y = date.getFullYear() + '-';
-        M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-        D = date.getDate() + ' ';
-        
-
-        h = date.getHours();
-        if(h < 10){
-            h = '0' + h + ':'
-        }else{
-            h = h + ':';
-        }
-
-        m = date.getMinutes() + ':';
-        if(m < 10){
-            m = '0' + m + ':'
-        }else{
-            m = m + ':';
-        }
-        
-        s = date.getSeconds();
-        if(s < 10){
-            s = '0' + s;
-        }
-    }
-
-    $(document).ready(function(){
-        $(".self-table-content td:nth-child(8)").each(function(){
-            
-            var res =timestampToTime($(this).val());
-            console.log(res);
-            $(this).html(res);
-        });
-    });
+    
     
 </script>
 

@@ -133,9 +133,9 @@ class PublicController extends Controller{
 	public function upload_images($file,$exts,$path){
 		$upload = new \Think\Upload();// 实例化上传类
 		$upload->maxSize   =  2097152 ;// 设置附件上传大小2M
-		$upload->exts      =  $exts;// 设置附件上传类型
-		$upload->rootPath  =  __PUBLIC__ . '/home/images/'; // 设置附件上传根目录
-		$upload->savePath  =  ''; // 设置附件上传（子）目录
+		$upload->exts      =  $exts ? $exts : array('jpg','jepg','png');// 设置附件上传类型
+		$upload->rootPath  =  './Public/'; // 设置附件上传根目录
+		$upload->savePath  =  '/home/images/'; // 设置附件上传（子）目录
 		$upload->saveName = time().mt_rand(100000,999999); //文件名称创建时间戳+随机数
 		$upload->autoSub  = true; //自动使用子目录保存上传文件 默认为true
 		$upload->subName  = $path; //子目录创建方式，采用数组或者字符串方式定义
@@ -158,7 +158,7 @@ class PublicController extends Controller{
 		$content = preg_replace("/<\/div>/i", "", $content);      
 		$content = preg_replace("/<!--[^>]*-->/i", "", $content);//注释内容
 	   // $content = preg_replace("/style=.+?['|\"]/i",'',$content);//去除样式  
-		$content = preg_replace("/class=.+?['|\"]/i",'',$content);//去除样式  
+		$content = preg_replace("/class=.+?['|\"]/i",'',$content);//去除样式    
 		$content = preg_replace("/id=.+?['|\"]/i",'',$content);//去除样式     
 		$content = preg_replace("/lang=.+?['|\"]/i",'',$content);//去除样式      
 		$content = preg_replace("/width=.+?['|\"]/i",'',$content);//去除样式  

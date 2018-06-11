@@ -107,7 +107,13 @@
 
                         <div class="page-container">
                                 <div class="aaa_pts_show_1">【 好友助力管理 】</div>
-            
+                                <div class="search">
+                                        <form action="{:U('index')}" method="post"  enctype="multipart/form-data">
+                                            <input type="text" class="input-text" placeholder="搜索用户名" name="search" id="search" style="width:200px;margin:auto 15px;"/>
+                                            <input class="btn btn-primary radius" type="submit" name="submit" value="&nbsp;&nbsp;搜索&nbsp;&nbsp;">
+                                        </form> 
+                                </div>
+
                                 <div class="aaa_pts_show_2">
                                     <p>一共发起了好友助力{$total}个，其中有好友参加助力的{$active}个，完成助力的{$completed}个</p>
                                       <table class="pro_3">
@@ -141,11 +147,13 @@
                                     
                                          <!-- 遍历 -->
                                          </tbody>
+                                         <if condition="(!$search)"> 
                                          <tr>
                                                 <td colspan="7" class="td_2">
                                                     {$page_index} 
                                                 </td>
                                             </tr>
+                                            </if>
                                       </table>
                                     
                                 </div>
@@ -171,6 +179,10 @@
     }
 
     function timestampToTime(timestamp) {
+
+        if(timestamp == 0){
+            return ' ';
+        }
         var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
         Y = date.getFullYear() + '-';
         M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';

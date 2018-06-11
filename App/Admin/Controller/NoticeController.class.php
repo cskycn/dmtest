@@ -19,15 +19,17 @@ class NoticeController extends PublicController{
 		$empty = 0;
 		if(count($count) == 0){
 			$empty = 1;
+		}else{
+			$rows=ceil($count/rows);
+			$page=(int)$_REQUEST['page'];
+			$page<0?$page=0:'';
+			$limit=$page*rows;
+			$page_index=$this->page_index($count,$rows,$page);
+
+			$list = $hander ->order('id desc')->limit($limit,rows) ->select();
 		}
 		
-		$rows=ceil($count/rows);
-		$page=(int)$_REQUEST['page'];
-		$page<0?$page=0:'';
-		$limit=$page*rows;
-		$page_index=$this->page_index($count,$rows,$page);
-
-		$list = $hander ->order('id desc')->limit($limit,rows) ->select();
+		
 
 		$this->assign('page_index',$page_index);
 		$this->assign('page',$page);
@@ -42,8 +44,7 @@ class NoticeController extends PublicController{
 	//*************************
 	public function del(){
 
-		$itemID = trim($_REQUEST["item"]);
-		
+		$itemID = I('request.item');
 		$con["id"] = $itemID;
 
 		/*
@@ -77,8 +78,8 @@ class NoticeController extends PublicController{
 
 	public function doAdd(){
 
-		$data["title"] = trim($this->clearhtml($_POST["title"]));
-		$data["content"] = trim($this->clearhtml($_POST["content"]));
+		$data["title"] = I('request.title');
+		$data["content"] = I('request.content');
 		$data["ctime"] = time();
 		$data["status"] = 1; 
 

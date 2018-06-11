@@ -21,8 +21,8 @@ class SmsController extends Controller {
         $templId = '';  //短信模板的ID
 
 
-        $phone = $_REQUEST["phone"];
-        $userID = $_REQUEST["user_id"];
+        $phone = I('request.phone');
+        $userID = I('request.user_id');
         
 
         //S('sms_'.$phone,null);
@@ -93,8 +93,7 @@ class SmsController extends Controller {
         $gap = time() - (int)$tmp["time"];
         if($gap >= 60){
             return true;
-        }
-        
+        }   
         return false;
 
     }

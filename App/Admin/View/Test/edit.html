@@ -109,7 +109,7 @@
                         <div class="row cl">
                             <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>检测ID</label>
                             <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" disabled="disabled" placeholder="输入正整数,不建议修改" name="tid" id="tid" value="{$res.id}">
+                                <input type="text" class="input-text" readonly="readonly" placeholder="输入正整数,不建议修改" name="tid" id="tid" value="{$res.id}">
                             </div>
                         </div>
                 
@@ -121,9 +121,16 @@
                         </div>
 
                         <div class="row cl">
-                            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>需要助力几次</label>
+                            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>团队预约助力次数</label>
                             <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" placeholder="输入次数" name="friend_count" id="friend_count" value="{$res.friend_count}">
+                                <input type="text" class="input-text" placeholder="输入次数" name="person_count" id="person_count" value="{$res.person_count}">
+                            </div>
+                        </div>
+
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>个人预约助力次数</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <input type="text" class="input-text" placeholder="输入次数" name="group_count" id="group_count" value="{$res.group_count}">
                             </div>
                         </div>
                 
@@ -180,7 +187,8 @@
 <script type="text/javascript">
     $(document).ready(function(){
         /** 验证是否成功  */  
-        $("#the-form").ajaxForm(function(data){    
+        $("#the-form").ajaxForm(function(data){   
+            console.log(data); 
             if(data == true){  
                 alert("提交成功");  
                 location.href = "index";
@@ -192,8 +200,7 @@
 
     function check_img_format (obj){
         
-        if(!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(obj.val())){
-            alert("图片类型必须是.gif,jpeg,jpg,png中的一种")
+        if(!/\.(jpg|jpeg|png|JPG|PNG)$/.test(obj.val())){
             return false;
         }
     }
@@ -227,7 +234,8 @@
     function ac_from(){
         var name=$('#name').val();
         var video_url=$('#video_url').val();
-        var friend_count=$('#friend_count').val();
+        var group_count=$('#group_count').val();
+        var person_count=$('#person_count').val();
         var cover_img_url=$('#cover_img_url');
         var detail_img_url=$('#detail_img_url');
 
@@ -242,24 +250,26 @@
         }
 
         var regNum = /^[0-9]*[1-9][0-9]*$/　
-        if(!regNum.test(friend_count.trim())){
+        if(!regNum.test(group_count) &&!regNum.test(person_count)){
             alert('助力次数请填写正整数');
             return false;
         }
 
-        
+        /*
 
         if(cover_img_url.val() != ""){
             if(!check_img_format(cover_img_url) || !getImageSize(cover_img_url)){
+                alert('封面图片尺寸或者格式不对');
                 return false;
             }
         }
 
         if(detail_img_url.val() != ""){
             if(!check_img_format(detail_img_url) || !getImageSize(detail_img_url)){
+                alert('详情图片尺寸或者格式不对');
                 return false;
             }
-        }
+        }*/
     }
 
 </script>

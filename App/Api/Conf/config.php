@@ -35,6 +35,8 @@
 
 	//以上配置项，是从接口包中alipay.config.php 文件中复制过来，进行配置；
 
+
+	/*
 	//微信配置参数
 	'weixin'=>array(
 
@@ -48,6 +50,30 @@
 	  //这里是异步通知页面url，提交到项目的Pay控制器的notifyurl方法；
 	  'notify_url'=>'',
 
+	),
+*/
+
+
+	//每个检测需要用户填写的项目
+	'TEST_SUBMIT_FORM'=>array(
+		'1' => array('user_name','phone','province','city','area','address','objects','order_time','info'),
+		'2' => array('user_name','phone','province','city','area','address','objects','order_time','info'),
+		'3' => array('user_name','phone','province','city','area','address','objects','order_time','info'),
+		'4' => array('user_name','phone','province','city','area','address','object_num','info'),
+		'5' => array('user_name','phone','province','city','area','address','room_number','order_time','info'),
+		'6' => array('user_name','phone','province','city','area','address','object_num','info'),
+		'7' => array('user_name','phone','province','city','area','address','object_num','info'),
+	),
+
+	//每个检测报告的项目
+	'TEST_RESULT_FORM'=>array(
+		'1' => array('items','photos'),
+		'2' => array('items','photos'),
+		'3' => array('items','photos'),
+		'4' => array('items','photos'),
+		'5' => array('items','photos','decorate_time'),
+		'6' => array('items','photos'),
+		'7' => array('items','photos'),
 	)
   );
 

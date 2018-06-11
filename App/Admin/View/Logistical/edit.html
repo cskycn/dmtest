@@ -109,42 +109,38 @@
                         <div class="row cl" style="display:none;">
                                 <label class="form-label col-xs-4 col-sm-3"></span></label>
                                 <div class="formControls col-xs-8 col-sm-3">
-                                    <input type="text" class="input-text" name="id"  id="id" value="{$res.id}">
+                                    <input type="text" class="input-text" name="id"  id="id" value="{$id}">
                                 </div>
                             </div>
+
+
+                        <div class="row cl">
+                            <label class="form-label col-xs-4 col-sm-3"></span>检测名</label>
+                            <div class="formControls col-xs-8 col-sm-3">
+                                <input type="text" class="input-text" disabled="disabled" placeholder="检测名"  id="name" value="{$name}">
+                            </div>
+                        </div>
                 
                         <div class="row cl">
                             <label class="form-label col-xs-4 col-sm-3"></span>姓名</label>
                             <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" disabled="disabled" placeholder="输入姓名"  id="user_name" value="{$res.user_name}">
+                                <input type="text" class="input-text" disabled="disabled" placeholder="姓名"  id="user_name" value="{$user_name}">
                             </div>
                         </div>
 
                         <div class="row cl">
                             <label class="form-label col-xs-4 col-sm-3"></span>手机号</label>
                             <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" disabled="disabled" placeholder=""  id="phone" value="{$res.phone}">
+                                <input type="text" class="input-text" disabled="disabled" placeholder="手机号"  id="phone" value="{$phone}">
                             </div>
                         </div>
 
-                        <div class="row cl">
-                            <label class="form-label col-xs-4 col-sm-3"></span>房间数</label>
-                            <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" disabled="disabled" placeholder=""  id="room_number" value="{$res.room_number}">
-                            </div>
-                        </div>
-
-                        <div class="row cl">
-                            <label class="form-label col-xs-4 col-sm-3"></span>检测名</label>
-                            <div class="formControls col-xs-8 col-sm-3">
-                                <input type="text" class="input-text" disabled="disabled" placeholder=""  id="name" value="{$res.name}">
-                            </div>
-                        </div>
+                        
 
                         <div class="row cl">
                                 <label class="form-label col-xs-4 col-sm-3"></span>发货单号</label>
                                 <div class="formControls col-xs-8 col-sm-3">
-                                    <input type="text" class="input-text"  placeholder="输入物流单号" name="send_id" id="send_id" value="">
+                                    <input type="text" class="input-text"  placeholder="输入物流单号" name="send_id" id="send_id" value="{$send_id}">
                                 </div>
                             </div>
                 
@@ -173,6 +169,7 @@
     $(document).ready(function(){
         /** 验证是否成功  */  
         $("#the-form").ajaxForm(function(data){    
+            console.log(data)
             if(data == true){  
                 alert("提交成功");  
                 location.href = "index";

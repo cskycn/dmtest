@@ -16,7 +16,7 @@ class MessageController extends PublicController{
 	public function index(){
 		$count=M('customer')->count();
 		$empty = 0;
-		if(count($count) == 0){
+		if($count == 0){
 			$empty = 1;
 		}
 		
@@ -29,7 +29,7 @@ class MessageController extends PublicController{
 
 
 		$messageList = M()->table('dm_customer a, dm_user b')
-						   ->where('b.id = a.user_id')
+						   ->where('b.open_id = a.user_id')
 						   ->field('a.id,a.user_id,a.content,a.create_time,a.reply,a.is_read,b.nick_name')
 						   ->order('a.id desc')
 						   ->limit($limit,rows)
@@ -48,7 +48,7 @@ class MessageController extends PublicController{
 	//*************************
 	public function reply(){
 
-		$con["id"] = $this->clearhtml(trim($_REQUEST["id"]));
+		$con["id"] = I('request.id');
 
 		$res = M()->table('dm_customer a, dm_user b')
 				  ->where('b.id = a.user_id' )
@@ -73,8 +73,8 @@ class MessageController extends PublicController{
 	//*************************
 	public function doReply(){
 
-		$con["id"] = trim($_REQUEST["id"]);
-		$data["reply"] = $this->clearhtml(trim($_REQUEST["reply"]));
+		$con["id"] = I('request.id');
+		$data["reply"] = I('request.reply');
 		$data["reply_time"] = time();
 
 		if($data["reply"] == ''){

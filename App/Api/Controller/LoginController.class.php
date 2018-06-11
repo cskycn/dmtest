@@ -9,13 +9,30 @@
     public function index(){
 
     }
+
+    //********************
+    //登录和退出的操作
+    //********************
+    public function checkUserExisted(){ 
+      if(IS_POST){
+        $userinfo = json_decode(I('post.user_obj'),true);
+        $con["avatarUrl"] = $userinfo["avatarUrl"];
+        $res = M('user')->where($con)->find();
+        if($res && res!=''){
+          echo json_encode(array('status'=> 200, 'meta' =>$res));
+        }else{
+          $this->errorMsg($statusCode = 302,$errorMsg = "用户尚未注册");
+          exit();
+        }
+      }
+    }
     //********************
     //登录和退出的操作
     //********************
     public function doLogin(){ 
       if(IS_POST){
-        $code = $_POST['code'];
-        $userInfo = json_decode($_POST['userInfo'],true);
+        $code = I('post.code');
+        $userInfo = json_decode(I('post.userInfo'),true);
 
         if(trim($code)=='') {
           exit;

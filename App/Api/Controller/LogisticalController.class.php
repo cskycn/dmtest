@@ -14,7 +14,7 @@ class LogisticalController extends PublicController {
 	//  获取一个用户所有的物流信息
 	//***************************
     public function getUserLogistical(){
-        $con["user_id"] = trim($_POST["user_id"]);
+        $con["user_id"] = I('post.user_id');
 
         $hander = M('logistical');
         if($res = $hander->where($con)->select()){
@@ -57,7 +57,7 @@ class LogisticalController extends PublicController {
 	//  调用快递鸟api接收物流信息更新
 	//***************************
     public function getNewLogistical(){
-        $res = json_decode($_REQUEST["RequestData"],true);
+        $res = json_decode(I('request.RequestData'),true);
         if(array_key_exists("data",$res) && array_key_exists("EBusinessID",$res) && $res["EBusinessID"] == '1346616'){
             $data = $res["data"];
 

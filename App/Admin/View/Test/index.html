@@ -105,18 +105,18 @@
         <div class="show_iframe">
                 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 管理后台 <span class="c-gray en">&gt;</span> 检测管理  <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
                 <div class="page-container">
-                    <div class="aaa_pts_show_1">【 检测管理 】 <button class="btn btn-primary radius"  style="margin-left:30px;" onclick="hrefToNew()" >新增检测</button></div>
-
+                    <div class="aaa_pts_show_1">【 检测管理 】<!-- <button class="btn btn-primary radius"  style="margin-left:30px;" onclick="hrefToNew()" >新增检测</button>--></div>
+                    <p style="margin-left: 14px;color:#888;margin-bottom:-15px;">说明：助力人数填写对应的数字，即可启用该类型的预约</p>
                     <div class="aaa_pts_show_2"> 
-                        
                           <table class="pro_3">
                              <tr class="tr_1">
                                <td style="width:40px;">ID</td>
                                <td style="width:120px;">检测名</td>
-                               <td style="width:120px;">视频地址</td>
+                               <td style="width:12px;">视频地址</td>
                                <td style="width:120px;">封面地址</td>
-                               <td style="width:120px;">详情图片地址</td>
-                               <td style="width:120px;">需要助力几次</td>
+                               <td style="width:120px;">详情图片地址</td> 
+                               <td style="width:120px;">团队预约助力数</td>     
+                               <td style="width:120px;">个人预约助力数</td>    
                                <td style="width:120px;">检测状态</td>
                                <td style="width:180px;">操作</td>
                              </tr>
@@ -124,29 +124,45 @@
                              <!-- 遍历 -->
                             <if condition="($empty eq 1)"> 
                                 <tr>
-                                    <td colspan='8'>没有数据</td>
+                                    <td colspan='9'>没有数据</td>
                                 </tr>
                             </if>
                             <volist name="tests" id="v">
                                <tr data-id="{$v.id}" data-name="{$v.name}">
                                    <td>{$v["id"]}</td>
                                    <td>{$v.name}</td>
-                                   <td>{$v.video_url}</td>
+                                   <td><embed src="{$v.video_url}" height="200" style="display:block;margin-bottom:20px;"></embed></td>
                                    <td><img src="{$v.cover_img_url}" style="width:120px;"/></td>
                                    <td><img src="{$v.detail_img_url}" style="width:120px;"/></td>
-                                   <td>{$v.friend_count}</td>
-                                   <td>{$v.status}</td>
-                                   <td><a onclick="edit_id_urls({$v.id})">编辑</a> &nbsp;&nbsp;&nbsp;&nbsp;<a onclick="del_id_urls({$v.id})">删除</a></td>
+                                   <td>{$v.group_count}</td>
+                                   <td>{$v.person_count}</td>
+                                   <td><if condition="($v.status eq 1)"> 
+                                            活动中
+                                        </if>
+                                        <if condition="($v.status eq 0)"> 
+                                            已停止
+                                        </if></td>
+                                   <td><a onclick="edit_id_urls({$v.id})">编辑</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                                       <a onclick="stop_id({$v.id})">
+                                          <if condition="($v.status eq 1)"> 
+                                              停用
+                                          </if>
+                                          <if condition="($v.status eq 0)"> 
+                                              启用
+                                          </if>
+                                       </a></td>
                                 </tr>
                              </volist>
                         
                              <!-- 遍历 -->
                              </tbody>
+                             <if condition="($empty eq 0)"> 
                              <tr>
-                                    <td colspan="8s" class="td_2">
+                                    <td colspan="9" class="td_2">
                                         {$page_index} 
                                     </td>
                                 </tr>
+                                </if>
                           </table>
                         
                     </div>
@@ -174,22 +190,30 @@
         location=url;
     }
 
-    function del_id_urls (itemID,page) {
-        if (confirm('您确定要删除吗？')) {
+    function stop_id (itemID) {
 
-            $.get('del', { 'item': itemID },
-                function(data){
-                    
-                    if(data == true){
-                        $(".pro_3 tr[data-id='"+itemID+"']").remove();
-                        alert("删除成功");
-                        
-                    }else{
-                        alert("删除失败");
+        if(itemID){
+            console.log($(".pro_3 tr[data-id='"+itemID+"'] td:nth-child(7)").html().replace(/\s+/g,"") );
+            var flag = ( $(".pro_3 tr[data-id='"+itemID+"'] td:nth-child(7)").html().replace(/\s+/g,"") == '活动中')?'停用':'启用';
+            // var flag = ($("#".itemID).html() == '启用')?'停用':'启用';
+            if (confirm('您确定要'+ flag + '吗？')) {
+            $.post("{:U('doStop')}",{itemID:itemID,status:flag},function(result){
+                console.log(result);
+                if(result){
+                    if(flag == '启用') {
+                        $(".pro_3 tr[data-id='"+itemID+"']  td:nth-child(6)").html("活动中");
+                        $(".pro_3 tr[data-id='"+itemID+"']   td:nth-child(7) a:nth-child(2)").html("停用");
                     }
+                    if(flag == '停用') {
+                        $(".pro_3 tr[data-id='"+itemID+"']  td:nth-child(6)").html("已停止");
+                        $(".pro_3 tr[data-id='"+itemID+"']  td:nth-child(7) a:nth-child(2)").html("启用");
+                    }
+                }else{
+                    alert("操作失败");
                 }
-            );
+            });
         };
+        }
     }
 
     function edit_id_urls (itemID) {

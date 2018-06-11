@@ -12,10 +12,10 @@ class LoginController extends PublicController{
 	public function doLogin(){
 		
 		if(IS_POST){
-			$username=$_POST['username'];
+			$username=I('post.username');
 			$admininfo=M('admin')->where("name='$username'")->find();
 			if($admininfo && $admininfo != array()){
-				if(MD5(MD5($_POST['pwd'])) == $admininfo['password']){
+				if(MD5(MD5(I('post.pwd'))) == $admininfo['password']){
 					$admin=array(
 					   "id"         =>$admininfo["id"],
 					   "name"       =>$admininfo["name"]

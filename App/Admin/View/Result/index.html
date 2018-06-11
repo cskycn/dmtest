@@ -105,7 +105,72 @@
                 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理后台 <span class="c-gray en">&gt;</span> 管理首页 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
                 <div class="page-container">
 
-                   结果{$test}
+                    <div class="aaa_pts_show_1">【 检测报告结果 】</div>
+
+                    <div class="search">
+                            <form action="{:U('index')}" method="post"  enctype="multipart/form-data">
+                                <input type="text" class="input-text" placeholder="搜索姓名" name="search" id="search" style="width:200px;margin:auto 15px;"/>
+                                <input class="btn btn-primary radius" type="submit" name="submit" value="&nbsp;&nbsp;搜索&nbsp;&nbsp;">
+                            </form> 
+                    </div>
+
+                    <div class="aaa_pts_show_2"> 
+                        
+                          <table class="pro_3">
+                             <tr class="tr_1">
+                               <td style="width:40px;">ID</td>
+                               <td style="width:120px;">检测名</td>
+                               <td style="width:120px;">预约类型</td>
+                               <td style="width:120px;">姓名</td>
+                               <td style="width:120px;">电话</td>
+                               <td style="width:120px;">地址</td>
+                               <td style="width:120px;">检测房间数</td>
+                               <td style="width:120px;">预约时间</td>
+                               <td style="width:120px;">物件</td>
+                               <td style="width:120px;">物件数</td>
+                               <td style="width:120px;">备注</td>
+                               <td style="width:180px;">操作</td>
+                             </tr>
+                             <tbody id="news_option">
+                             <!-- 遍历 -->
+                            <if condition="($empty eq 1)"> 
+                                <tr>
+                                    <td colspan='12'>没有数据</td>
+                                </tr>
+                            </if>
+                            <volist name="list" id="v">
+                               <tr data-id="{$v.id}" data-name="{$v.name}" class="self-table-content">
+                                   <td>{$v.id}</td>
+                                   <td>{$v.name}</td>
+                                   <td>{$v.order_type}</td>
+                                   <td>{$v.user_name}</td>
+                                   <td>{$v.phone}</td>
+                                   <td>
+                                        <if condition="$v.address NEQ '' ">{$v.province}-{$v.city}-{$v.area}-{$v.address}
+                                                <else /> 
+                                        </if>
+                                    </td>
+                                   <td>{$v.room_number}</td>
+                                   <td>{$v.order_time}</td>
+                                   <td>{$v.objects}</td>
+                                   <td>{$v.object_num}</td>
+                                   <td>{$v.info}</td>
+                                   <td><a onclick="edit({$v.id})">编辑报告</a></td>
+                                </tr>
+                             </volist>
+                        
+                             <!-- 遍历 -->
+                             </tbody>
+                             <if condition="($empty eq 0)"> 
+                             <tr>
+                                    <td colspan="12" class="td_2">
+                                        {$page_index} 
+                                    </td>
+                                </tr>
+                                </if>
+                          </table>
+                        
+                    </div>
                 </div>
         </div>
     </div>
@@ -121,9 +186,11 @@
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript" src="__PUBLIC__/admin/lib/jquery.contextmenu/jquery.contextmenu.r2.js"></script>
 <script type="text/javascript">
-    function product_option(page){
-        let url='?page='+page;
-        location=url;
+    function edit(aid){
+        if(aid){
+            let url = "edit?activity_id=" + aid;
+            location.href = url;
+        }
     }
 </script>
 
