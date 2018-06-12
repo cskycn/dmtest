@@ -106,8 +106,8 @@ class ResultController extends PublicController{
 		获取填写的数据
 		*/
 
-		$data["item1"] = I('post.item1');
-		$data["result1"] = I('post.result1');
+		$data["item1"] = I('request.item1');
+		$data["result1"] = I('request.result1');
 		if($data["item1"]=='' || $data["result1"]==''){
 			echo false;
 			return false;
@@ -115,8 +115,8 @@ class ResultController extends PublicController{
 
 		for($i=2;$i<=5;$i++){
 			if(isset($_POST["item".$i])){
-				$data["test_".$i] = I("post.item".$i);
-				$data["result_".$i] = I("post.result".$i);
+				$data["test_".$i] = I("request.item".$i);
+				$data["result_".$i] = I("request.result".$i);
 				if($data["test_".$i]=='' || $data["result_".$i]==''){
 					//为空直接删除这个data
 					unset($data["test_".$i]);
@@ -126,7 +126,7 @@ class ResultController extends PublicController{
 		}
 		
 		if(isset($_POST["decorate_time"])){
-			$data["decorate_time"] = strtotime(I('post.decorate_time') + ' 08:00:00');
+			$data["decorate_time"] = strtotime(I('request.decorate_time') + ' 08:00:00');
 		}
 
 		

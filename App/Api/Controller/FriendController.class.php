@@ -20,9 +20,9 @@ class FriendController extends PublicController {
         $statusCode = 500;
         $errorMsg = '提交信息有误';
 
-        $submit["user_id"] = I('post.userid');
-        $submit["activity_id"] = intval(I('post.activity_id'));
-        $submit["openid"] = I('post.openid');
+        $submit["user_id"] = I('request.userid');
+        $submit["activity_id"] = intval(I('request.activity_id'));
+        $submit["openid"] = I('request.openid');
 
         if($submit["user_id"] == '' || $submit["activity_id"] == ''){
             $statusCode = 301;

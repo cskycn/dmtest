@@ -26,7 +26,7 @@ class TestController extends PublicController {
         //提交所需信息
         //======================
         $con = array();
-        $con["id"] = intval(I('post.test_id'));
+        $con["id"] = intval(I('request.test_id'));
 
 
         if(!$con["id"]){
@@ -47,7 +47,7 @@ class TestController extends PublicController {
 	//  获取对应活动的状态
     //***************************
     public function getStatus(){
-		$aid = intval(I('post.activity_id'));
+		$aid = intval(I('request.activity_id'));
         $data['status'] = activity_to_status($aid);
         if($data['status']){
             echo json_encode(array('status'=> 200, 'meta'=>$res));

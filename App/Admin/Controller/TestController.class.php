@@ -103,10 +103,10 @@ class TestController extends PublicController{
 
 		$con["id"] = intval(I('request.tid'));
 
-		$data["name"] = I('post.name');
-		$data["video_url"] = I('post.video_url');
-		$data["group_count"] = I('post.group_count');
-		$data["person_count"] = I('post.person_count');
+		$data["name"] = I('request.name');
+		$data["video_url"] = I('request.video_url');
+		$data["group_count"] = I('request.group_count');
+		$data["person_count"] = I('request.person_count');
 
 		//统一的图片上传信息
 		$exts = array('jpg','jepg','png');

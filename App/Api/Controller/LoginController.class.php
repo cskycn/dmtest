@@ -15,7 +15,7 @@
     //********************
     public function checkUserExisted(){ 
       if(IS_POST){
-        $userinfo = json_decode(I('post.user_obj'),true);
+        $userinfo = json_decode(I('request.user_obj'),true);
         $con["avatarUrl"] = $userinfo["avatarUrl"];
         $res = M('user')->where($con)->find();
         if($res && res!=''){
@@ -30,13 +30,16 @@
     //登录和退出的操作
     //********************
     public function doLogin(){ 
+      
       if(IS_POST){
-        $code = I('post.code');
-        $userInfo = json_decode(I('post.userInfo'),true);
+        
+        $code = I('request.code');
+        $userInfo = json_decode($_REQUEST["userInfo"],true);
 
         if(trim($code)=='') {
           exit;
         }
+        
         //$userinfo = M('user')->where("code='$code'")->select();
         /*
         if($userinfo && $userinfo != array()){
@@ -60,11 +63,9 @@
           
           if($res = get_http_array("post",$url,$post_data)){
             if($res["errcode"]){
-              $this->errorMsg($statusCode = 301,$errorMsg = "微信授权异常");
+              $this->errorMsg($statusCode = 301,$errorMsg = $res["errmsg"]);
               exit();
-            }else{
-
-              
+            }else{              
               if($res["openid"] == '' || $res["session_key"] == '' ){
                 $this->errorMsg($statusCode = 302,$errorMsg = "微信授权异常");
                 exit();

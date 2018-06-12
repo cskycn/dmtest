@@ -113,7 +113,7 @@ class DetailController extends PublicController {
         $statusCode = 500;
         $errorMsg = '提交信息有误';
 
-        $submit = I('request.submit');
+        $submit = $_REQUEST["submit"];
         $testID  = I('request.test_id');
 
         $submit["user_id"] = trim($submit['userid']);
