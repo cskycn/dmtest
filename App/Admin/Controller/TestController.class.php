@@ -176,7 +176,7 @@ class TestController extends PublicController{
 		}
 		
 		echo true;
-		return true;
+		return true; 
 	}
 
 

@@ -15,7 +15,6 @@ class LogisticalController extends PublicController {
 	//***************************
     public function getUserLogistical(){
         $con["user_id"] = I('request.user_id');
-
         $hander = M('logistical');
         if($res = $hander->where($con)->select()){
             /*
@@ -60,7 +59,6 @@ class LogisticalController extends PublicController {
         $res = json_decode($_REQUEST["RequestData"],true);
         if(array_key_exists("data",$res) && array_key_exists("EBusinessID",$res) && $res["EBusinessID"] == '1346616'){
             $data = $res["data"];
-
             $hander = M('logistical');
             for($i = 0; $i <= count($data)-1; $i++) {
                 if($data[$i]["EBusinessID"] == '1346616' && $data[$i]["Success"] == true){
@@ -72,7 +70,8 @@ class LogisticalController extends PublicController {
                     $hander->where($con)->save($save);
                 }
             }
-
+            echo json_encode(array('EBusinessID'=> '1237100', 'UpdateTime'=>$save["update_time"],"Success"=> true, "Reason"=> ""));
+            exit();
         }else{
             return false;
         }

@@ -18,22 +18,21 @@ class SmsController extends Controller {
         $appid = '1400088944';
         $appkey = 'd5c05b78417b83f662a369ee5890cad0';
         $country_prefix = '86';
-        $templId = '';  //短信模板的ID
+        $templId = '128306';  //短信模板的ID
 
 
         $phone = I('request.phone');
-        $userID = I('request.user_id');
+      //  $userID = I('request.user_id');
         
 
         //S('sms_'.$phone,null);
-
         if(!$phone || !$this->checkSmsCode($phone)) { //短信验证码限定时间内
             $statusCode = 301;
             $errorMsg = '发送短信太频繁或错误';
             $this->errorMsg($statusCode,$errorMsg);
             exit();
         }
-        
+
         $code = $this->createSMSCode();
 
         try {

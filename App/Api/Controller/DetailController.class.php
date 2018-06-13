@@ -114,7 +114,7 @@ class DetailController extends PublicController {
         $errorMsg = '提交信息有误';
 
         $submit = $_REQUEST["submit"];
-        $testID  = I('request.test_id');
+        $testID  = intval($submit['testid']);
 
         $submit["user_id"] = trim($submit['userid']);
         $submit["test_id"] = intval($submit['testid']);

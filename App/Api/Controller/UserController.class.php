@@ -44,6 +44,7 @@ class UserController extends PublicController {
         $con['user_id'] = array('EQ',trim($_REQUEST['user_id']));
         $hander = M('activity');
         $res = $hander->where($con)->select();
+        ofhul5KXzYSrV_vwsVWVqV-0ibaM
         */
         $userID = I('request.user_id');
         $res = M()->table('dm_test a,dm_activity b')

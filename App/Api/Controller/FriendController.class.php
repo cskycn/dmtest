@@ -100,7 +100,7 @@ class FriendController extends PublicController {
         $statusCode = 500;
         $errorMsg = '提交信息有误';
 
-        $submit["activity_id"] = intval(I('request.activity_id'));
+        $submit["activity_id"] = intval($_REQUEST["activity_id"]);
         $submit["ownner_id"] = I('request.ownner_id');
 
         if(trim($submit["activity_id"]) == '' || !is_int($submit["activity_id"])){

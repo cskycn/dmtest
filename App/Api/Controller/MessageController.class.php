@@ -102,7 +102,7 @@ class MessageController extends PublicController {
         $noticeCon["status"] = 1;
 
         //$customer = M('customer')->where($con)->select();
-        $notice = M('notice')->where($noticeCon)->select();
+        $notice = M('notice')->where($noticeCon)->order('ctime desc')->select();
         //$c_constomer = count($customer);
         //$c_notice = count($notice);
 

@@ -29,17 +29,23 @@ class LogisticalController extends PublicController{
 			$limit=$page*rows;
 			$page_index=$this->page_index($count,$rows,$page);
 
-			$list = M()	->table('dm_logistical a, dm_user b, dm_test d')
-						->where('a.test_id = d.id  && a.user_id = b.open_id' )
+			$sql = " SELECT a.id,d.name,b.nick_name,a.update_time,a.send_id
+					FROM dm_logistical a
+					JOIN dm_test d ON a.test_id = d.id
+					JOIN dm_user b ON a.user_id = b.open_id
+					 ";
+
+			$list = M()->query($sql);
+						/*->table('dm_logistical a, dm_user b, dm_test d')
+						->join('dm_logistical ON dm_logistical.test_id = dm_test.id')
+						->join('dm_logistical ON dm_logistical.user_id = dm_user.open_id')
+						//->where('a.test_id = d.id  && a.user_id = b.open_id' )
 						->field('a.id,d.name,b.nick_name,a.update_time,a.send_id')
 						->order('a.id desc')
 						->limit($limit,rows)
-						->select(); 
+						->select(); */
 		}
-		
-		
-		//print_r($list);
-		
+	
 		$this->assign('page_index',$page_index);
 		$this->assign('page',$page);
 		$this->assign('empty',$empty);	
@@ -93,14 +99,16 @@ class LogisticalController extends PublicController{
 		//不做运单号的unique
 		$res = $hander->where($con)->save($data);
 		if($res){
-			//orderTracesSubByJson($data["send_id"]);
-			echo true;
-			exit;
-		}else{
-			echo false;
-			exit;
+			$res = orderTracesSubByJson($data["send_id"]);
+			if($res){
+				$res = json_decode($res,true);
+				if($res["Success"] == true){
+					echo true;
+					exit;
+				}
+			}
 		}
+		echo false;
+		exit;
 	}
-	
-	
 }
