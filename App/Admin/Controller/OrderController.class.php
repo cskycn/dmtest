@@ -29,7 +29,7 @@ class OrderController extends PublicController{
 
 				$activityList = M()->table('dm_activity a, dm_user b, dm_test c')
 								   ->where('b.open_id = a.user_id && c.id = a.test_id')
-								   ->field('a.id,a.test_id,a.user_id,a.user_name,a.phone,a.province,a.city,a.area,a.address,a.room_number,a.order_time,a.info,a.status,b.nick_name,c.name')
+								   ->field('a.id,a.test_id,a.user_id,a.order_type,a.user_name,a.phone,a.province,a.city,a.area,a.address,a.room_number,a.order_time,a.info,a.status,b.nick_name,c.name')
 								   ->order('a.id desc')
 								   ->limit($limit,rows)
 								   ->select(); 
@@ -45,7 +45,7 @@ class OrderController extends PublicController{
 		}else{
 			$activityList = M()->table('dm_activity a, dm_user b, dm_test c')
 							   ->where('b.open_id = a.user_id && c.id = a.test_id && b.nick_name LIKE \'%'.$search.'%\'')
-							   ->field('a.id,a.test_id,a.user_id,a.user_name,a.phone,a.province,a.city,a.area,a.address,a.room_number,a.order_time,a.info,a.status,b.nick_name,c.name')
+							   ->field('a.id,a.test_id,a.user_id,a.order_type,a.user_name,a.phone,a.province,a.city,a.area,a.address,a.room_number,a.order_time,a.info,a.status,b.nick_name,c.name')
 							   ->order('a.id desc')
 							   ->select(); 
 

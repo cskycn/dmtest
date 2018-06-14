@@ -74,21 +74,18 @@
                 </dl>
         
                 <dl id="general">
-                    <dt><a href="{:U('logistical/index')}" ><i class="Hui-iconfont">&#xe616;</i> 用户物流管理</a></dt>
+                    <dt><a href="{:U('logistical/index')}" ><i class="Hui-iconfont">&#xe616;</i> 物流管理</a></dt>
                 </dl>
             
                 <dl id="general">
-                    <dt><a href="{:U('result/index')}" ><i class="Hui-iconfont">&#xe616;</i> 用户检测结果</a></dt>
+                    <dt><a href="{:U('result/index')}" ><i class="Hui-iconfont">&#xe616;</i> 检测报告结果</a></dt>
                 </dl>
         
                 <dl id="general">
                     <dt><a href="{:U('friend/index')}" ><i class="Hui-iconfont">&#xe616;</i> 好友助力统计</a></dt>
                 </dl>
                 
-                <dl id="general">
-                    <dt><a href="{:U('message/index')}" ><i class="Hui-iconfont">&#xe616;</i> 用户留言管理</a></dt>
-                </dl>
-
+    
                 <dl id="general">
                         <dt><a href="{:U('notice/index')}" ><i class="Hui-iconfont">&#xe616;</i> 消息推送</a></dt>
                     </dl>
@@ -102,9 +99,9 @@
 
     <div id="iframe_box" class="Hui-article">
         <div class="show_iframe">
-                <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理后台 <span class="c-gray en">&gt;</span> 管理首页 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+                <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 用户预约 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
                 <div class="page-container">
-                        <div class="aaa_pts_show_1">【 预约管理 】</div>
+                        <div class="aaa_pts_show_1">【 用户预约查询 】</div>
                         <div class="search">
                             <form action="{:U('index')}" method="post"  enctype="multipart/form-data">
                                 <input type="text" class="input-text" placeholder="搜索用户名" name="search" id="search" style="width:200px;margin:auto 15px;"/>
@@ -118,7 +115,8 @@
                                  <tr class="tr_1">
                                    <td style="width:40px;">ID</td>
                                    <td style="width:120px;">检测名</td>
-                                   <td style="width:120px;">用户ID</td>
+                                   <td style="width:120px;">预约类型</td>
+                                   
                                    <td style="width:120px;">用户名</td>
                                    <td style="width:120px;">姓名</td>
                                    <td style="width:120px;">联系电话</td>
@@ -137,11 +135,21 @@
                                    <tr data-id="{$v.id}" data-name="{$v.name}" class="self-table-content">
                                        <td>{$v["id"]}</td>
                                        <td>{$v.name}</td>
-                                       <td>{$v.user_id}</td>
+                                       <if condition="($v.order_type eq 0)"> 
+                                            <td>个人预约</td>
+                                            <else /> 
+                                            <td>团队预约</td>
+                                       </if>
+
+
                                        <td>{$v.nick_name}</td>
                                        <td>{$v.user_name}</td>
                                        <td>{$v.phone}</td>
-                                       <td>{$v.address}</td>
+                                       <td>
+                                            <if condition="$v.address NEQ '' ">{$v.province}-{$v.city}-{$v.area}-{$v.address}
+                                                    <else /> 
+                                            </if>
+                                        </td>
                                        <td>{$v.info}</td>
                             <!--           <td><a onclick="edit_id_urls({$v.id},{$page})">编辑</a></td>  -->
                                     </tr>
@@ -150,11 +158,13 @@
                                  <!-- 遍历 -->
                                  </tbody>
                                  <if condition="(!$search)"> 
+                                        <if condition="($empty eq 0)"> 
                                  <tr>
                                         <td colspan="8" class="td_2">
                                             {$page_index} 
                                         </td>
                                     </tr>
+                                    </if>
                                 </if>
                               </table>
                             

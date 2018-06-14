@@ -20,8 +20,8 @@ class ResultController extends PublicController{
 		if($search == ''){
 			$count = M()->table('dm_activity a, dm_test c')
 							   ->where('a.status = 4 && a.test_id = c.id')
-							   ->field('a.id,a.test_id,a.user_id,a.user_name,a.phone,a.province,a.city,a.area,a.address,a.room_number,a.objects,a.object_num,a.order_time,a.info,a.status,c.name')
-							   ->order('a.id desc')
+							   //->field('a.id,a.test_id,a.user_id,a.user_name,a.phone,a.order_type,a.province,a.city,a.area,a.address,a.room_number,a.objects,a.object_num,a.order_time,a.info,a.status,c.name')
+							   //->order('a.id desc')
 							   ->count();
 			$empty = 0;
 			if($count == 0){
@@ -35,7 +35,7 @@ class ResultController extends PublicController{
 
 				$list = M()->table('dm_activity a, dm_test c')
 							   ->where('a.status = 4 && a.test_id = c.id')
-							   ->field('a.id,a.test_id,a.user_id,a.user_name,a.phone,a.province,a.city,a.area,a.address,a.room_number,a.objects,a.object_num,a.order_time,a.info,a.status,c.name')
+							   ->field('a.id,a.test_id,a.user_id,a.user_name,a.phone,a.province,a.order_type,a.city,a.area,a.address,a.room_number,a.objects,a.object_num,a.order_time,a.info,a.status,c.name')
 							   ->order('a.id desc')
 							   ->limit($limit,rows)
 							   ->select(); 
@@ -43,7 +43,7 @@ class ResultController extends PublicController{
 		}else{
 			$list = M()->table('dm_activity a,dm_test c')
 							   ->where('a.status = 4 && a.test_id = c.id && a.user_name LIKE \'%'.$search.'%\'' )
-							   ->field('a.id,a.test_id,a.user_id,a.user_name,a.phone,a.province,a.city,a.area,a.address,a.room_number,a.objects,a.object_num,a.order_time,a.info,a.status,c.name')
+							   ->field('a.id,a.test_id,a.user_id,a.user_name,a.phone,a.order_type,a.province,a.city,a.area,a.address,a.room_number,a.objects,a.object_num,a.order_time,a.info,a.status,c.name')
 							   ->order('a.id desc')
 							   ->select(); 
 			if(!$list){
@@ -55,6 +55,7 @@ class ResultController extends PublicController{
 		$this->assign('page',$page);
 		$this->assign('empty',$empty);	
 		$this->assign('list',$list);	
+		$this->assign('search',$search);	
 		$this->display();	
 	}
 

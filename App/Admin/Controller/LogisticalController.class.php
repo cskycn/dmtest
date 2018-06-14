@@ -16,39 +16,54 @@ class LogisticalController extends PublicController{
 		/*$hander = M('activity');
 		$con['status'] = array('in','4,5,6');
 		$count= $hander->where($con)->count();*/
-		$hander = M('logistical');
-		$count= $hander->count();
 
-		$empty = 0;
-		if($count == 0){
-			$empty = 1;
-		}else{
-			$rows=ceil($count/rows);
-			$page=(int)$_REQUEST['page'];
-			$page<0?$page=0:'';
-			$limit=$page*rows;
-			$page_index=$this->page_index($count,$rows,$page);
+		$search = I('request.search');
+		if($search == ''){
+			$hander = M('logistical');
+			$count= $hander->count();
 
-			$sql = " SELECT a.id,d.name,b.nick_name,a.update_time,a.send_id
+			$empty = 0;
+			if($count == 0){
+				$empty = 1;
+			}else{
+
+				$rows=ceil($count/rows);
+				$page=(int)$_REQUEST['page'];
+				$page<0?$page=0:'';
+				$limit=$page*rows;
+				$page_index=$this->page_index($count,$rows,$page);
+
+				$sql = " SELECT a.id,d.name,b.nick_name,a.update_time,a.send_id,c.user_name
 					FROM dm_logistical a
 					JOIN dm_test d ON a.test_id = d.id
 					JOIN dm_user b ON a.user_id = b.open_id
+					JOIN dm_activity c ON a.activity_id = c.id
 					 ";
 
-			$list = M()->query($sql);
-						/*->table('dm_logistical a, dm_user b, dm_test d')
-						->join('dm_logistical ON dm_logistical.test_id = dm_test.id')
-						->join('dm_logistical ON dm_logistical.user_id = dm_user.open_id')
-						//->where('a.test_id = d.id  && a.user_id = b.open_id' )
-						->field('a.id,d.name,b.nick_name,a.update_time,a.send_id')
-						->order('a.id desc')
-						->limit($limit,rows)
-						->select(); */
+				$list = M()->query($sql);
+			}
+
+		}else{
+			$sql = " SELECT a.id,d.name,b.nick_name,a.update_time,a.send_id,c.user_name
+					FROM dm_logistical a
+					JOIN dm_test d ON a.test_id = d.id
+					JOIN dm_user b ON a.user_id = b.open_id
+					JOIN dm_activity c ON a.activity_id = c.id
+					WHERE c.user_name LIKE '%"  . $search . "%'
+					 ";
+
+				$list = M()->query($sql);
+
+			$counter = count($list);
+
+			if($counter == 0) $empty = 1;
 		}
+		
 	
 		$this->assign('page_index',$page_index);
 		$this->assign('page',$page);
 		$this->assign('empty',$empty);	
+		$this->assign('search',$search);	
 		$this->assign('tests',$list);
 		$this->assign('total',$count);
 		$this->display();	

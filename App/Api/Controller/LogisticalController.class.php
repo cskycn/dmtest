@@ -57,16 +57,30 @@ class LogisticalController extends PublicController {
 	//***************************
     public function getNewLogistical(){
         $res = json_decode($_REQUEST["RequestData"],true);
-        if(array_key_exists("data",$res) && array_key_exists("EBusinessID",$res) && $res["EBusinessID"] == '1346616'){
-            $data = $res["data"];
+
+        if(array_key_exists("Data",$res) && array_key_exists("EBusinessID",$res) && $res["EBusinessID"] == 'test1346616'){
+            $data = $res["Data"];
             $hander = M('logistical');
+
+            
             for($i = 0; $i <= count($data)-1; $i++) {
-                if($data[$i]["EBusinessID"] == '1346616' && $data[$i]["Success"] == true){
+                if($data[$i]["EBusinessID"] == 'test1346616' && $data[$i]["Success"] == true){
                     $last = count($data[$i]["Traces"]);
                     $con["send_id"] = $data[$i]["LogisticCode"];
                     $save["status"] = $data[$i]["State"];
-                    $save["update_time"] = $data[$i]["Traces"][$last-1]["AcceptTime"];
-                    $save["msg"] = $data[$i]["Traces"][$last-1]["AcceptStation"];
+                    $save["update_time"] = strtotime($data[$i]["Traces"][$last-1]["AcceptTime"]);
+                    
+                    $save["msg"] = "{\"Data\":[";
+
+                    for($j=0;$j<$last;$j++){
+                        $save["msg"] = $save["msg"] .
+                            "{\"time\":\"" . $data[$i]["Traces"][$j]["AcceptTime"] . 
+                            "\",\"desc\":\"" . $data[$i]["Traces"][$j]["AcceptStation"] ."\"},";
+                    }
+
+                    $save["msg"] = rtrim($save["msg"],",");
+                    $save["msg"] = $save["msg"] . "]}";
+
                     $hander->where($con)->save($save);
                 }
             }

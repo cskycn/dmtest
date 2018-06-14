@@ -17,7 +17,6 @@ class FriendController extends PublicController{
 		$search = I('request.search');
 
 		$hander = M('activity');
-
 		//参与助力的
 		$count = $hander->count();
 		//有发起助力的
@@ -42,7 +41,7 @@ class FriendController extends PublicController{
 			//查询所有的助力记录
 				$helpList = M()	->table('dm_friendhelp a, dm_user b,dm_activity c, dm_test d')
 								->where('b.open_id = a.user_id && c.id = a.activity_id && d.id = c.test_id' )
-								->field('a.id,a.activity_id,a.count,a.is_complete,a.creat_time,a.finish_time,b.nick_name,d.name')
+								->field('a.id,a.activity_id,a.count,a.is_complete,b.nick_name,d.name')
 								->order('a.id desc')
 								->limit($limit,rows)
 								->select(); 
@@ -51,7 +50,7 @@ class FriendController extends PublicController{
 		}else{
 			$helpList = M()	->table('dm_friendhelp a, dm_user b,dm_activity c, dm_test d')
 							->where('b.open_id = a.user_id && c.id = a.activity_id && d.id = c.test_id && b.nick_name LIKE \'%'.$search.'%\'' )
-							->field('a.id,a.activity_id,a.count,a.is_complete,a.creat_time,a.finish_time,b.nick_name,d.name')
+							->field('a.id,a.activity_id,a.count,a.is_complete,b.nick_name,d.name')
 							->order('a.id desc')
 							->select(); 
 			if(!$helpList){
